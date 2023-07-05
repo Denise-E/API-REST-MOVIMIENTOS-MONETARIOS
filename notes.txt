@@ -6,3 +6,7 @@ Run code: uvicorn main:app --reload
     pip install "fastapi[all]"
 
 
+> Working with MySQL:
+    pip install sqlalchemy
+
+
