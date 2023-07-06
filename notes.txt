@@ -10,3 +10,4 @@ Run code: uvicorn main:app --reload
     pip install sqlalchemy
 
 
+Deje en crud.py: https://fastapi.tiangolo.com/tutorial/sql-databases/#read-data
