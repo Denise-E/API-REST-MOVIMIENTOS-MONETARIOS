@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 class ClienteBase(BaseModel):
     nombre: str 
@@ -32,7 +33,7 @@ class MovimientoBase(BaseModel):
     id_cuenta = int # Va aca?
     tipo = int
     importe = float
-    fecha = str.DATETIMEFORMAT  # A chequear
+    fecha = datetime
 
 class MovimientoCreate(MovimientoBase):
     pass
@@ -71,7 +72,7 @@ class Categoria(CategoriaBase):
     class Config:
         orm_mode = True
 
-class Categoria_ClienteBase(BaseModel):
+'''class Categoria_ClienteBase(BaseModel):
     id_categoria = int
     id_cliente = int
 
@@ -82,4 +83,4 @@ class Categoria_Cliente(Categoria_ClienteBase):
     pass
 
     class Config:
-        orm_mode = True
+        orm_mode = True'''
