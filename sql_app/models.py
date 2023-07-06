@@ -28,6 +28,7 @@ class Movimiento(Base):
     importe = Column(Float)
     fecha = Column(DateTime)
 
+
 class Tipo_Movimiento(Base):
     __tablename__ = "tipo_movimiento"
 

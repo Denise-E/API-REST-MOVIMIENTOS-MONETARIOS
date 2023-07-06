@@ -16,3 +16,5 @@ def create_cliente(db: Session, cliente: schemas.ClienteCreate):
     db.refresh(db_cliente)
     return db_cliente
 
+def get_movimiento(db: Session, movimiento_id: int):
+    return db.query(models.Movimiento).filter(models.Movimiento.id == movimiento_id).first()
