@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from sqlalchemy.orm import Session
 
 from sql_app import crud, models, schemas
@@ -23,10 +23,36 @@ def read_clients(skip: int = 0, db: Session = Depends(get_db)):
     clientes = crud.get_clientes(db, skip=skip)
     return clientes
 
+@app.get("/cuentas/{cliente_id}", response_model=list[schemas.Movimiento]) #Para verificar para poder eliminar clientes con sus cuentas
+def read_cuenta(cliente_id: int, db: Session = Depends(get_db)):
+    cuentas = crud.get_cuentasPorClientes(db,cliente_id = cliente_id )
+    return cuentas
 
-@app.get("/movimientos/{movimiento_id}", response_model=schemas.Movimiento) #Devuelve solo ID
+@app.get("/clientes/{cliente_id}", response_model=schemas.Cliente)
+def read_cliente(cliente_id: int, db: Session = Depends(get_db)):
+    cliente = crud.get_cliente(db, cliente_id=cliente_id)
+    if cliente is None:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+    return cliente
+
+"""@app.delete("/clientes/{cliente_id}", response_model=list[schemas.Cliente])
+def eliminar_cliente(cliente_id: int, db: Session = Depends(get_db)):
+    cliente = crud.delete_cliente(db, cliente_id = cliente_id)
+    return cliente"""
+
+@app.delete("/clientes/{cliente_id}", response_model=list[schemas.Cliente]) 
+def eliminar_cliente(cliente_id: int, db: Session = Depends(get_db)):
+    cliente = crud.delete_cliente(db, cliente_id = cliente_id)
+    return cliente
+
+@app.get("/movimientos/{movimiento_id}", response_model=schemas.Movimiento) #Devuelve solo ID, CHEQUEAR SCHEMA
 def read_movimiento(movimiento_id: int, db: Session = Depends(get_db)):
-    db_movimiento = crud.get_movimiento(db, movimiento_id=movimiento_id)
-    if db_movimiento is None:
+    movimiento = crud.get_movimiento(db, movimiento_id=movimiento_id)
+    if movimiento is None:
         raise HTTPException(status_code=404, detail="Movimiento no encontrado")
-    return db_movimiento
+    return movimiento
+
+@app.delete("/movimientos/{movimiento_id}", response_model=list[schemas.Cliente]) 
+def eliminar_movimiento(movimiento_id: int, db: Session = Depends(get_db)):
+    cliente = crud.delete_movimiento(db, movimiento_id = movimiento_id)
+    return cliente

@@ -17,7 +17,6 @@ ENDPOINTS:
 
 Clientes
 • Registrar/Editar un cliente.
-• Eliminar un cliente.
 • Agregar cliente a categoría.
 • Consultar un cliente, sus cuentas y categorías.
 • Consultar saldo disponible en cada una de sus cuentas. El saldo se construye
@@ -26,4 +25,3 @@ utilizando los movimientos
 
 Movimientos
 • Registrar un movimiento, puede ser del tipo Ingreso o Egreso de dinero.
-• Eliminar un movimiento.
