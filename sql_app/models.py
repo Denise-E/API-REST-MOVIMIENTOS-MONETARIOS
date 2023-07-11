@@ -8,8 +8,8 @@ class Cliente(Base):
     __tablename__ = "clientes"
 
     id = Column(Integer, primary_key=True, index=True)
-    dni = Column(Integer)
-    nombre = Column(String(150))
+    dni = Column(Integer, nullable=False)
+    nombre = Column(String(200), nullable=False)
     cuentas = relationship('Categoria', secondary='categoria_cliente')
 
 
@@ -17,30 +17,30 @@ class Cuenta(Base):
     __tablename__ = "cuentas"
 
     id = Column(Integer, primary_key=True, index=True)
-    id_cliente = Column(Integer, ForeignKey("clientes.id"))
+    id_cliente = Column(Integer, ForeignKey("clientes.id"), nullable=False)
 
 
 class Movimiento(Base):
     __tablename__ = "movimientos"  
 
     id = Column(Integer, primary_key=True, index=True)
-    id_cuenta = Column(Integer, ForeignKey("cuentas.id"))
-    tipo = Column(Integer, ForeignKey("tipo_movimiento.id"))
-    importe = Column(Float)
-    fecha = Column(DateTime)
+    id_cuenta = Column(Integer, ForeignKey("cuentas.id"), nullable=False)
+    tipo = Column(Integer, ForeignKey("tipo_movimiento.id"), nullable=False)
+    importe = Column(Float, nullable=False)
+    fecha = Column(DateTime, nullable=False)
 
 
 class Tipo_Movimiento(Base):
     __tablename__ = "tipo_movimiento"
 
     id = Column(Integer, primary_key=True, index=True)
-    tipo = Column(String(7)) #Ingreso o Egreso
+    tipo = Column(String(7), nullable=False) #Ingreso o Egreso
 
 class Categoria(Base):
     __tablename__ = "categorias"
 
     id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String(100))
+    nombre = Column(String(100), nullable=False)
     clientes = relationship('Cliente', secondary='categoria_cliente')
 
 
