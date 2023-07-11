@@ -3,6 +3,7 @@ from datetime import datetime
 
 class ClienteBase(BaseModel):
     nombre: str 
+    dni: int 
     #Al crearlo no sabemos id ya que se deifne al crearse el registro en la BBDD
 
 

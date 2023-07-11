@@ -6,6 +6,9 @@ from . import models, schemas
 def get_cliente(db: Session, cliente_id: int):
     return db.query(models.Cliente).filter(models.Cliente.id == cliente_id).first()
 
+def get_clientePorNombre(db: Session, cliente_nombre: str):
+    return db.query(models.Cliente).filter(models.Cliente.nombre == cliente_nombre).first()
+
 def get_clientes(db: Session, skip: int = 0):
     return db.query(models.Cliente).offset(skip).all()
 

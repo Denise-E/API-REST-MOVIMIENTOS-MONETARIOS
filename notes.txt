@@ -16,11 +16,11 @@ Deje en crud.py: https://fastapi.tiangolo.com/tutorial/sql-databases/#read-data
 ENDPOINTS:
 
 Clientes
-• Registrar/Editar un cliente.
+• Editar un cliente. 
 • Agregar cliente a categoría.
 • Consultar un cliente, sus cuentas y categorías.
 • Consultar saldo disponible en cada una de sus cuentas. El saldo se construye
-utilizando los movimientos
+utilizando los movimientos  (get_total_usd)
 
 
 Movimientos

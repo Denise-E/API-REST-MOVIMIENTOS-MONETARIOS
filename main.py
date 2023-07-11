@@ -35,15 +35,23 @@ def read_cliente(cliente_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
     return cliente
 
-"""@app.delete("/clientes/{cliente_id}", response_model=list[schemas.Cliente])
-def eliminar_cliente(cliente_id: int, db: Session = Depends(get_db)):
-    cliente = crud.delete_cliente(db, cliente_id = cliente_id)
-    return cliente"""
 
 @app.delete("/clientes/{cliente_id}", response_model=list[schemas.Cliente]) 
 def eliminar_cliente(cliente_id: int, db: Session = Depends(get_db)):
     cliente = crud.delete_cliente(db, cliente_id = cliente_id)
     return cliente
+
+@app.post("/clientes/", response_model=schemas.Cliente)
+def create_cliente(cliente: schemas.ClienteCreate, db: Session = Depends(get_db)): #Tendria que reestructurar la BBDD y agregar dni para diferenciarlos por ese dato unico
+    return crud.create_cliente(db=db, cliente=cliente)
+
+
+'''@app.put("/clientes/{cliente_id}", response_model=schemas.Cliente) #IN PROCESSS
+def update_cliente(cliente_id: int,nombre: str, cliente: schemas.ClienteCreate, db: Session = Depends(get_db)):
+    db_user = crud.get_cliente(db, cliente_id=cliente_id)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return crud.create_user(db=db, user=user)'''
 
 @app.get("/movimientos/{movimiento_id}", response_model=schemas.Movimiento) #Devuelve solo ID, CHEQUEAR SCHEMA
 def read_movimiento(movimiento_id: int, db: Session = Depends(get_db)):

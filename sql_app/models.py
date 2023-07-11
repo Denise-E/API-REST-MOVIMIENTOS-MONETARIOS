@@ -8,6 +8,7 @@ class Cliente(Base):
     __tablename__ = "clientes"
 
     id = Column(Integer, primary_key=True, index=True)
+    dni = Column(Integer)
     nombre = Column(String(150))
     cuentas = relationship('Categoria', secondary='categoria_cliente')
 
