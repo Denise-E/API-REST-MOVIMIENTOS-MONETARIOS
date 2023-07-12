@@ -1,17 +1,18 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 
 class ClienteBase(BaseModel):
+    id: Optional[int]
+    dni: int
     nombre: str 
-    dni: int 
-    #Al crearlo no sabemos id ya que se deifne al crearse el registro en la BBDD
 
 
 class ClienteCreate(ClienteBase):
     pass
 
 
-class Cliente(ClienteBase): #Lo que obtendremos de la API
+class Cliente(ClienteBase):
     id: int 
 
     class Config:

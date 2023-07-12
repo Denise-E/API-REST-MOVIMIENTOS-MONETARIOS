@@ -17,6 +17,9 @@ def get_db():
     finally:
         db.close()
 
+@app.get("/")
+def root():
+    return "Proyecto realizado por Denise Eichenblat"
 
 @app.get("/clientes", response_model=list[schemas.Cliente])
 def read_clients(skip: int = 0, db: Session = Depends(get_db)):
@@ -41,8 +44,9 @@ def eliminar_cliente(cliente_id: int, db: Session = Depends(get_db)):
     cliente = crud.delete_cliente(db, cliente_id = cliente_id)
     return cliente
 
-@app.post("/clientes/", response_model=schemas.Cliente)
-def create_cliente(cliente: schemas.ClienteCreate, db: Session = Depends(get_db)): #Tendria que reestructurar la BBDD y agregar dni para diferenciarlos por ese dato unico
+@app.post("/clientes", response_model=schemas.Cliente)
+def create_cliente(cliente: schemas.ClienteCreate, db: Session = Depends(get_db)):
+    print(cliente)
     return crud.create_cliente(db=db, cliente=cliente)
 
 
