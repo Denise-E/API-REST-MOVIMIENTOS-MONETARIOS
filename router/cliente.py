@@ -21,7 +21,7 @@ def read_clients(skip: int = 0, db: Session = Depends(get_db)):
     clientes = crud.get_clientes(db, skip=skip)
     return clientes
 
-#Detalle de cliente con id pasado por URL.
+#Detalle de cliente con id pasado por URL. Con sus cuentas y categorias.
 @cliente.get("/clientes/{client_id}", response_model=schema.ClienteDetail)
 def read_clients(client_id: int, db: Session = Depends(get_db)):
     cliente = crud.get_clienteDetail(db, client_id = client_id)
@@ -34,6 +34,7 @@ def read_clients(client_id: int, db: Session = Depends(get_db)):
 Creación de un cliente. Al crearse también se crearán 1 o más cuentas con sus respectivas
 categorias. El alta de estos últimos no deben hacerse por consigna pero si estan incluidos
 los campos en el esquema.
+Valido que no exista ya el cliente por dni desde crud.create_mov
 '''
 #Agregar valdiacion de que no exista el cliente.
 @cliente.post('/clientes',response_model=schema.Cliente)

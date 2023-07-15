@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 import models.Cliente as model
 from schemas import ClienteSchema as schema
@@ -9,6 +10,9 @@ def get_clientes(db: Session, skip: int = 0):
 
 def get_clientePorId(db: Session,client_id: int):
     return db.query(model.Cliente).filter(model.Cliente.id == client_id).first()
+
+def get_clientePorDni(db: Session,client_dni: int):
+    return db.query(model.Cliente).filter(model.Cliente.dni == client_dni).first()
 
 def get_clienteDetail(db: Session,client_id: int):
     client = get_clientePorId(db,client_id)
@@ -24,9 +28,16 @@ def get_clienteDetail(db: Session,client_id: int):
 
 def create_mov(db: Session, data:schema.ClienteCreate):
     #Creacion cliente. Mismo proceso deberia hacerlo con el modelo de las tablas cuentas y categorias
-    new_client = model.Cliente(dni = data.dni, nombre = data.nombre)
-    db.add(new_client)
-    db.commit()
-    db.refresh(new_client)
+    client = get_clientePorDni(db, data.dni) #Valido que no exista ya el cliente por DNI
+    new_client = None
+
+    if client is None:
+        new_client = model.Cliente(dni = data.dni, nombre = data.nombre)
+        db.add(new_client)
+        db.commit()
+        db.refresh(new_client)
+    else:
+         raise HTTPException(status_code=404, detail="Ya existe un cliente registrado con el DNI ingresado")
+
     return new_client
 
