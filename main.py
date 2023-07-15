@@ -1,8 +1,8 @@
-from fastapi import Depends, FastAPI, HTTPException, Request, Response
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 
 from router.cliente import cliente
-from config.database import SessionLocal, engine, metaData
+from router.movimiento import movimiento
+from config.database import engine, metaData
 from models import Cliente, Categoria, Categoria_Cliente, Cuenta, Movimiento, Tipo_Movimiento;
 
 Cliente.Base.metadata.create_all(bind=engine)
@@ -14,12 +14,5 @@ Tipo_Movimiento.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# DB
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 app.include_router(cliente)
+app.include_router(movimiento)

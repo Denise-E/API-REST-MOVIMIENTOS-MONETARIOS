@@ -8,12 +8,15 @@ class MovimientoBase(BaseModel):
     importe = float
     fecha = datetime
 
+
 class MovimientoCreate(MovimientoBase):
     pass
 
-
-class Movimiento(MovimientoBase): 
-    id: int 
+class Movimiento(MovimientoBase):
+    id: int
+    tipo = int
+    importe = float
+    fecha = datetime
 
     class Config:
         orm_mode = True

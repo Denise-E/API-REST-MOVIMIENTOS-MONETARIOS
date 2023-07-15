@@ -10,3 +10,6 @@ class Movimiento(Base):
     tipo = Column(Integer, ForeignKey("tipo_movimiento.id"), nullable=False)
     importe = Column(Float, nullable=False)
     fecha = Column(DateTime, nullable=False)
+
+    def __str__(self):
+        return "{} - {}".format(self.id,self.id_cuenta)
