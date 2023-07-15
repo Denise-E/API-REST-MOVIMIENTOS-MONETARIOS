@@ -23,3 +23,14 @@ def getNombreCategoria(db: Session, category_id: int):
         raise HTTPException(status_code=404, detail="No existe la categoria buscada")
 
     return category.nombre
+
+def delete_clientCategories(db: Session, client_id: int):
+    
+    categories = db.query(model.Categoria_Cliente).filter(model.Categoria_Cliente.id_cliente == client_id).all()
+
+    if categories is not None:
+        for i in range(len(categories)):
+            db.delete(categories[i])
+            db.commit()
+
+    return categories

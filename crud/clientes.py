@@ -41,3 +41,15 @@ def create_mov(db: Session, data:schema.ClienteCreate):
 
     return new_client
 
+
+def delete_client(db: Session, client_id: int):
+    
+    client = get_clientePorId(db, client_id=client_id)
+
+    if client is not None:
+        client_category = crud_categorias.delete_clientCategories(db,client.id)
+        client_account = crud_cuentas.delete_clienteAccounts(db,client.id)
+        db.delete(client)
+        db.commit()
+
+    return client

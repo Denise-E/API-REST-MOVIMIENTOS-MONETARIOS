@@ -11,3 +11,14 @@ def get_cuentasPorCliente(db: Session,client_id: int):
         finalList[0]["IDs"].append(account[i].id)
 
     return finalList 
+
+def delete_clienteAccounts(db: Session, client_id: int):
+    
+    accounts = db.query(model.Cuenta).filter(model.Cuenta.id_cliente == client_id).all()
+
+    if accounts is not None:
+        for i in range(len(accounts)):
+            db.delete(accounts[i])
+            db.commit()
+
+    return accounts

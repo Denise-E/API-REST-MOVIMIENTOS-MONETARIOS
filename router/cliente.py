@@ -34,12 +34,21 @@ def read_clients(client_id: int, db: Session = Depends(get_db)):
 Creación de un cliente. Al crearse también se crearán 1 o más cuentas con sus respectivas
 categorias. El alta de estos últimos no deben hacerse por consigna pero si estan incluidos
 los campos en el esquema.
-Valido que no exista ya el cliente por dni desde crud.create_mov
+Valido que no exista previamente el cliente por dni desde crud.create_mov
 '''
-#Agregar valdiacion de que no exista el cliente.
 @cliente.post('/clientes',response_model=schema.Cliente)
 def create_client(input: schema.ClienteCreate,db: Session = Depends(get_db)):
     new_client = crud.create_mov(db, input)
     if new_client is None:
         raise HTTPException(status_code=404, detail="No se pudo registrar el cliente")
     return new_client
+
+#Eliminacion de un cliente, incluyendo las cuentas y categorias_cliente.
+@cliente.delete("/clientes/{client_id}")
+def delete_client(client_id: int, db: Session = Depends(get_db)):
+    db_client = crud.delete_client(db, client_id=client_id)
+
+    if db_client is None:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+
+    return "Cliente eliminado exitosamente"
