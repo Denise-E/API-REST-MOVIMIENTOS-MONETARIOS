@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from models import Cuenta
 
 class Cliente(BaseModel):
     id: int
@@ -19,5 +18,13 @@ class ClienteCreate(BaseModel):
     class Config:
         orm_mode = True
 
+class ClienteDetail(BaseModel):
+    id: int
+    dni: int
+    nombre: str 
+    categorias: list[object]
+    cuentas: list[object]
 
+    class Config:
+        orm_mode = True
 
