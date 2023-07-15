@@ -8,4 +8,4 @@ class Categoria(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String(100), nullable=False)
-    clientes = relationship('Cliente', secondary='categoria_cliente')
+    clientes = relationship('Cliente', secondary='categoria_cliente', overlaps="cuentas")
