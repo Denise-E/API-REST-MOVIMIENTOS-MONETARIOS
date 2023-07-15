@@ -5,29 +5,29 @@ from schemas import ClienteSchema as schema
 from crud import categorias as crud_categorias
 from crud import cuentas as crud_cuentas
 
-def get_clientes(db: Session, skip: int = 0):
+def get_clients(db: Session, skip: int = 0):
     return db.query(model.Cliente).offset(skip).all()
 
-def get_clientePorId(db: Session,client_id: int):
+def get_clientById(db: Session,client_id: int):
     return db.query(model.Cliente).filter(model.Cliente.id == client_id).first()
 
-def get_clientePorDni(db: Session,client_dni: int):
+def get_clientByDni(db: Session,client_dni: int):
     return db.query(model.Cliente).filter(model.Cliente.dni == client_dni).first()
 
-def get_clienteDetail(db: Session,client_id: int):
-    client = get_clientePorId(db,client_id)
+def get_clientDetail(db: Session,client_id: int):
+    client = get_clientById(db,client_id)
     clientDetail = None
 
     if client is not None:
-        client_category = crud_categorias.get_categoriasPorCliente(db,client.id)
-        client_account = crud_cuentas.get_cuentasPorCliente(db,client.id)
+        client_category = crud_categorias.get_categoriesByClient_detail(db,client.id)
+        client_account = crud_cuentas.get_accountsByClient_detail(db,client.id)
         clientDetail = schema.ClienteDetail(id = client.id, dni = client.dni, nombre =client.nombre, categorias = client_category, cuentas = client_account)
      
     return clientDetail
 
 
 def create_mov(db: Session, data:schema.ClienteCreate):
-    client = get_clientePorDni(db, data.dni) #Valido que no exista ya el cliente por DNI
+    client = get_clientByDni(db, data.dni) #Valido que no exista ya el cliente por DNI
     new_client = None
 
     if client is None:
@@ -44,11 +44,11 @@ def create_mov(db: Session, data:schema.ClienteCreate):
 
 def delete_client(db: Session, client_id: int):
     
-    client = get_clientePorId(db, client_id=client_id)
+    client = get_clientById(db, client_id=client_id)
 
     if client is not None:
-        client_category = crud_categorias.delete_clientCategories(db,client.id)
-        client_account = crud_cuentas.delete_clienteAccounts(db,client.id)
+        crud_categorias.delete_clientCategories(db,client.id)
+        crud_cuentas.delete_clienteAccounts(db,client.id)
         db.delete(client)
         db.commit()
 

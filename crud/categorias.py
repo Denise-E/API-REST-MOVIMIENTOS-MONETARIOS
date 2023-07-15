@@ -4,19 +4,23 @@ import models.Categoria_Cliente as model
 import models.Categoria as model_categoria
 
 
-def get_categoriasPorCliente(db: Session,client_id: int):
-    cat = db.query(model.Categoria_Cliente).filter(model.Categoria_Cliente.id_cliente == client_id).all()
+def get_categoriesByClient(db: Session,client_id: int):
+    return db.query(model.Categoria_Cliente).filter(model.Categoria_Cliente.id_cliente == client_id).all()
+    
+
+def get_categoriesByClient_detail(db: Session,client_id: int):
+    cat = get_categoriesByClient(db,client_id)
     finalList = []
     
     #Para acceder solo al nombre de la categoria, sin mostrar el id del cliente
     for i in range(len(cat)): 
-        finalList.append(getNombreCategoria(db,cat[i].id_categoria))
+        finalList.append(getCategoryName(db,cat[i].id_categoria))
 
 
     return finalList
-    
 
-def getNombreCategoria(db: Session, category_id: int):
+
+def getCategoryName(db: Session, category_id: int):
     category = db.query(model_categoria.Categoria).filter(model_categoria.Categoria.id == category_id).first()
     
     if category is None:
@@ -25,8 +29,7 @@ def getNombreCategoria(db: Session, category_id: int):
     return category.nombre
 
 def delete_clientCategories(db: Session, client_id: int):
-    
-    categories = db.query(model.Categoria_Cliente).filter(model.Categoria_Cliente.id_cliente == client_id).all()
+    categories = get_categoriesByClient(db,client_id)
 
     if categories is not None:
         for i in range(len(categories)):

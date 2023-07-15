@@ -18,13 +18,13 @@ def get_db():
 # Listado de todos sus clientes, sin detalles de sus cuentas ni categorias
 @cliente.get("/clientes", response_model=list[schema.Cliente])
 def read_clients(skip: int = 0, db: Session = Depends(get_db)):
-    clientes = crud.get_clientes(db, skip=skip)
+    clientes = crud.get_clients(db, skip=skip)
     return clientes
 
 #Detalle de cliente con id pasado por URL. Con sus cuentas y categorias.
 @cliente.get("/clientes/{client_id}", response_model=schema.ClienteDetail)
 def read_clients(client_id: int, db: Session = Depends(get_db)):
-    cliente = crud.get_clienteDetail(db, client_id = client_id)
+    cliente = crud.get_clientDetail(db, client_id = client_id)
     if cliente is None:
         raise HTTPException(status_code=404, detail="Cliente no existente")
     return cliente
