@@ -1,18 +1,23 @@
 from pydantic import BaseModel
-from typing import Optional
+from models import Cuenta
 
-class ClienteBase(BaseModel): #Los datos que nos van a llegar.
-    id: Optional[int]
+class Cliente(BaseModel):
+    id: int
     dni: int
     nombre: str 
 
+    class Config:
+        orm_mode = True
 
-class ClienteCreate(ClienteBase):
-    pass
-
-
-class Cliente(ClienteBase):
-    id: int 
+class ClienteCreate(BaseModel):
+    dni: int
+    nombre: str 
+    categorias: list[int]
+    cantCuentas: int #Solo necesito cantidad para crearlas ya que cuenta tiene columns id y id_cliente
+    
 
     class Config:
         orm_mode = True
+
+
+
