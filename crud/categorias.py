@@ -7,13 +7,14 @@ import models.Categoria as model_categoria
 def get_categoriasPorCliente(db: Session,client_id: int):
     cat = db.query(model.Categoria_Cliente).filter(model.Categoria_Cliente.id_cliente == client_id).all()
     finalList = []
+    
+    #Para acceder solo al nombre de la categoria, sin mostrar el id del cliente
+    for i in range(len(cat)): 
+        finalList.append(getNombreCategoria(db,cat[i].id_categoria))
 
-    for i in range(len(cat)):
-        print("categoriassss", cat[i].id_categoria) 
-        finalList.append({"categoria": getNombreCategoria(db,cat[i].id_categoria)})
 
     return finalList
-    #Para acceder solo al nombre de la categoria, sin mostrar el id del cliente
+    
 
 def getNombreCategoria(db: Session, category_id: int):
     category = db.query(model_categoria.Categoria).filter(model_categoria.Categoria.id == category_id).first()
