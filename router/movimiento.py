@@ -24,7 +24,7 @@ def read_mov(mov_id: int, db: Session = Depends(get_db)):
 
     if db_mov is None:
         raise HTTPException(status_code=404, detail="Movimiento no encontrado")
-    
+    print(db_mov)
     return db_mov
 
 @movimiento.delete("/movimientos/{mov_id}", response_model=schema.Movimiento)
