@@ -27,11 +27,11 @@ def get_clienteDetail(db: Session,client_id: int):
 
 
 def create_mov(db: Session, data:schema.ClienteCreate):
-    #Creacion cliente. Mismo proceso deberia hacerlo con el modelo de las tablas cuentas y categorias
     client = get_clientePorDni(db, data.dni) #Valido que no exista ya el cliente por DNI
     new_client = None
 
     if client is None:
+        #Creacion cliente. Mismo proceso deberia hacerlo con el modelo de las tablas cuentas y categorias
         new_client = model.Cliente(dni = data.dni, nombre = data.nombre)
         db.add(new_client)
         db.commit()
