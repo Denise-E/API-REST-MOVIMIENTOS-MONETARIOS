@@ -18,20 +18,21 @@ def get_db():
         db.close()
 
 
-@movimiento.get("/movimientos/{mov_id}", response_model=schema.Movimiento)
+@movimiento.get("/movimientos/{mov_id}") #response_model=schema.Movimiento solo me devuelve id
 def read_mov(mov_id: int, db: Session = Depends(get_db)):
     db_mov = crud.get_mov(db, mov_id=mov_id)
 
     if db_mov is None:
         raise HTTPException(status_code=404, detail="Movimiento no encontrado")
     print(db_mov)
-    return db_mov
+    return {"id": db_mov.id, "id_cuenta": db_mov.id_cuenta, "tipo": db_mov.tipo, "importe": db_mov.importe, "fecha": db_mov.fecha}
 
-@movimiento.delete("/movimientos/{mov_id}", response_model=schema.Movimiento)
+
+@movimiento.delete("/movimientos/{mov_id}")
 def delete_mov(mov_id: int, db: Session = Depends(get_db)):
     db_mov = crud.delete_mov(db, mov_id=mov_id)
 
     if db_mov is None:
         raise HTTPException(status_code=404, detail="Movimiento no encontrado")
 
-    return db_mov
+    return "Movimiento eliminado exitosamente"

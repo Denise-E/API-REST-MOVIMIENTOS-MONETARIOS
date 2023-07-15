@@ -8,5 +8,4 @@ def delete_mov(db: Session, mov_id: int):
     mov = get_mov(db, mov_id=mov_id)
     db.delete(mov)
     db.commit()
-    db.refresh()
     return mov
