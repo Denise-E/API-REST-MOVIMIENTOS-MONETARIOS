@@ -37,3 +37,7 @@ def delete_clientCategories(db: Session, client_id: int):
             db.commit()
 
     return categories
+
+
+def validateCategoryForClient(db: Session, client_id:int, cat_id: int):
+    return None

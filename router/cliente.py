@@ -4,6 +4,7 @@ from config.database import SessionLocal
 from sqlalchemy.orm import Session
 from crud import clientes as crud
 from schemas import ClienteSchema as schema
+from schemas import Categoria_ClienteSchema as schema_clientCategory
 
 cliente = APIRouter()
 
@@ -52,3 +53,14 @@ def delete_client(client_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
 
     return "Cliente eliminado exitosamente"
+
+
+#Agrega un cliente ya existente a una nueva categoria.
+@cliente.post('/clientes/categorias/{client_id}')
+def add_clientToCategory(input: schema_clientCategory.Categoria_ClienteCreate,client_id: int, db: Session = Depends(get_db)):
+    client = crud.add_clientToCategory(input,db,client_id=client_id)
+
+    if client is None:
+        raise HTTPException(status_code=404, detail="No se pudo registrar el cliente a la nueva categoria")
+    
+    return "Cliente agregado exitosamente a la nueva categoria"

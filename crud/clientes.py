@@ -1,9 +1,12 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 import models.Cliente as model
+import models.Categoria_Cliente as model_categoriaCliente
 from schemas import ClienteSchema as schema
+from schemas import Categoria_ClienteSchema as schema_clientCategory
 from crud import categorias as crud_categorias
 from crud import cuentas as crud_cuentas
+
 
 def get_clients(db: Session, skip: int = 0):
     return db.query(model.Cliente).offset(skip).all()
@@ -53,3 +56,24 @@ def delete_client(db: Session, client_id: int):
         db.commit()
 
     return client
+
+
+#VERIFICAR QUE NO ESTE YA EN ESA CATEGORIA Y QUE EXISTA LA CATEGORIA
+def add_clientToCategory(data:schema_clientCategory.Categoria_ClienteCreate,db: Session,client_id: int):
+    #Primero valido que exista el cliente por el id pasado por URL
+    client = get_clientById(db, client_id=client_id)
+
+    if client is None:
+        raise HTTPException(status_code=404, detail="No se encontro al cliente")
+    
+    '''Si existe el cliente, desde categorias valido id de la catgeoria valido y que el ususario no este 
+    asociado ya a esa categoria'''
+    crud_categorias.validateCategoryForClient(db, client_id=client_id, cat_id = data.id_categoria)
+
+    #Si esta todo ok agregao el registro a la tabla cliente_categoria
+    new_category = model_categoriaCliente.Categoria_Cliente(id_categoria = data.id_categoria, id_cliente = client_id)
+    db.add(new_category)
+    db.commit()
+    db.refresh(new_category)
+
+    return new_category
