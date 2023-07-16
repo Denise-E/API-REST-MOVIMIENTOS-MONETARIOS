@@ -19,77 +19,86 @@ def get_db():
     finally:
         db.close()
 
-# Listado de todos sus clientes, sin detalles de sus cuentas ni categorias
+
+#Devuelve el listado de todos los clientes, sin detalles de sus cuentas ni categorias
 @cliente.get("/clientes", response_model=list[schema.Cliente])
 def read_clients(skip: int = 0, db: Session = Depends(get_db)):
-    clientes = crud.get_clients(db, skip=skip)
-    return clientes
+    return crud.get_clients(db, skip=skip)
+     
 
-#Detalle de cliente con id pasado por URL. Con sus cuentas y categorias.
+#Muestra el detalle del cliente con el id pasado por URL. Con sus cuentas y categorias.
 @cliente.get("/clientes/{client_id}", response_model=schema.ClienteDetail)
 def read_clients(client_id: int, db: Session = Depends(get_db)):
-    cliente = crud.get_clientDetail(db, client_id = client_id)
+    #Busca al cliente junto a sus cuentas y categorias. Devuelve un objeto ClienteDetail o None
+    cliente = crud.get_clientDetail(db, client_id = client_id) 
 
-    if cliente is None:
+    if cliente is None: #Si no se encontró al cliente lanzo excepción con status 404
         raise HTTPException(status_code=404, detail="Cliente no existente")
     
-    return cliente
+    return cliente #Si se encontró al cliente lo retorno para que sea mostrado en el navegador
 
 
 '''
-Creación de un cliente. Al crearse también se crearán 1 o más cuentas con sus respectivas
-categorias. El alta de estos últimos no deben hacerse por consigna pero si estan incluidos
-los campos en el esquema.
-Valido que no exista previamente el cliente por dni desde crud.create_mov
+Creación de un cliente. Al crearse también se deberían crear una o más cuentas y asociar al cliente con al menos
+una categoria. El alta de estos últimos no deben hacerse por consigna pero si estan incluidos los campos en el 
+esquema.
 '''
 @cliente.post('/clientes',response_model=schema.Cliente)
 def create_client(input: schema.ClienteCreate,db: Session = Depends(get_db)):
+    '''
+    Se intenta crear un cliente, realizando las validaciones previas pertinentes desde la carpeta crud.
+    Si se pudo crear crud.create_client devolverá un objeto de la clase Cliente, sino None.
+    '''
     new_client = crud.create_client(db, input)
 
-    if new_client is None:
+    if new_client is None: #Si no se lo pudo registrar lanzo una excepción
         raise HTTPException(status_code=404, detail="No se pudo registrar el cliente")
     
-    return new_client
+    return new_client #Si se registró al cliente lo devuelvo
 
 
-#Editar un cliente. En este metodo no se modificaran sus cuentas ni sus categorias, dada la consigna.
+#Editar un cliente. En este metodo no se modificaran sus cuentas ni sus categorias, dada la consigna
 @cliente.put("/clientes/{client_id}",response_model=schema.Cliente)
 def update_client(client_id: int, input:schema.ClienteUpdate,db: Session = Depends(get_db)):
-    client = crud.update_client(client_id, input, db)
+    client = crud.update_client(client_id, input, db) #Actualización del cliente
 
-    if client is None:
+    if client is None: #Si no pudo actualizarse lanzo excepción informandolo
         raise HTTPException(status_code=404, detail="No se pudo actualizar los datos del cliente")
     
-    return client
+    return client #Si se actualizó muestro los valores actualizados
 
 
-#Eliminacion de un cliente, incluyendo las cuentas y categorias_cliente.
+#Eliminacion de un cliente, incluyendo las cuentas y categorias_cliente
 @cliente.delete("/clientes/{client_id}",response_model=schema.Cliente)
-def delete_client(client_id: int, db: Session = Depends(get_db)):
+def delete_client(client_id: int, db: Session = Depends(get_db)): #Eliminación del cliente
     db_client = crud.delete_client(db, client_id=client_id)
 
-    if db_client is None:
+    if db_client is None: 
+        #Si no se lanzó una excepción en la ejecución de delete_cliente y el objeto llega vacío informo la situación
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
 
-    return db_client
+    return db_client #Si se eliminó el cliente muestro sus datos 
 
-#Agrega un cliente ya existente a una nueva categoria.
+#Agrega un cliente ya existente a una nueva categoria
 @cliente.post('/clientes/categorias/{client_id}')
 def add_clientToCategory(input: schema_clientCategory.Categoria_ClienteCreate,client_id: int, db: Session = Depends(get_db)):
-    client = crud.add_clientToCategory(input,db,client_id=client_id)
+    #Agrego el cliente a la categoria solicitada realizando las validaciones pertinentes desde el método
+    client = crud.add_clientToCategory(input,db,client_id=client_id) 
 
-    if client is None:
+    if client is None: # Si llegó None informo la situación
         raise HTTPException(status_code=404, detail="No se pudo registrar el cliente a la categoria")
     
-    return "Cliente agregado exitosamente a la nueva categoria"
+    return "Cliente agregado exitosamente a la nueva categoria" #Muestro un mensaje de éxito si se creó el registro
 
 
 #Detalle de cliente con id pasado por URL. Con sus cuentas y categorias.
 @cliente.get("/clientes/cuentas/{account_id}",response_model=schema_accounts.CuentaSaldo)
 def read_clients(account_id: int, db: Session = Depends(get_db)):
-    cuenta = crud_accounts.get_clientBalance(db, account_id = account_id)
+    #Obtengo el saldo total de la cuenta, tanto en pesos como en dolares
+    cuenta = crud_accounts.get_clientBalance(db, account_id = account_id) 
 
-    if cuenta is None:
+    if cuenta is None: 
+        #Si no se pudo crear y no se lanzó alguna excepción durante la ejecución de get_clientBalance informo la situación
         raise HTTPException(status_code=404, detail="Cuenta no existente")
     
-    return cuenta
+    return cuenta #Retorno la variable cuenta para mostrar los resultados en el navegador.
