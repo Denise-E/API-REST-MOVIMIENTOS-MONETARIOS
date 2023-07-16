@@ -13,10 +13,10 @@ def create_mov(db: Session, data:schema.MovimientoCreate):
     return new_mov
 
 def delete_mov(db: Session, mov_id: int):
-    print("DELETE")
     mov = get_mov(db, mov_id=mov_id)
+
     if mov is not None:
-        print("DELETE",mov)
         db.delete(mov)
         db.commit()
+        
     return mov

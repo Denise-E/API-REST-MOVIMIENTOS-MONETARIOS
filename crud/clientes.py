@@ -33,14 +33,14 @@ def create_mov(db: Session, data:schema.ClienteCreate):
     client = get_clientByDni(db, data.dni) #Valido que no exista ya el cliente por DNI
     new_client = None
 
-    if client is None:
-        #Creacion cliente. Mismo proceso deberia hacerlo con el modelo de las tablas cuentas y categorias
-        new_client = model.Cliente(dni = data.dni, nombre = data.nombre)
-        db.add(new_client)
-        db.commit()
-        db.refresh(new_client)
-    else:
-         raise HTTPException(status_code=404, detail="Ya existe un cliente registrado con el DNI ingresado")
+    if client is not None:
+        raise HTTPException(status_code=404, detail="Ya existe un cliente registrado con el DNI ingresado")
+    
+    #Creacion cliente. Mismo proceso deberia hacerlo con el modelo de las tablas cuentas y categorias
+    new_client = model.Cliente(dni = data.dni, nombre = data.nombre)
+    db.add(new_client)
+    db.commit()
+    db.refresh(new_client)
 
     return new_client
 

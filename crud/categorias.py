@@ -38,6 +38,9 @@ def delete_clientCategories(db: Session, client_id: int):
 
     return categories
 
-
+'''
+Si existe el cliente, desde categorias valido id de la catgeoria valido y que el ususario no este 
+asociado ya a esa categoria
+'''
 def validateCategoryForClient(db: Session, client_id:int, cat_id: int):
     return None
