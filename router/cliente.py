@@ -79,7 +79,7 @@ def add_clientToCategory(input: schema_clientCategory.Categoria_ClienteCreate,cl
     client = crud.add_clientToCategory(input,db,client_id=client_id)
 
     if client is None:
-        raise HTTPException(status_code=404, detail="No se pudo registrar el cliente a la nueva categoria")
+        raise HTTPException(status_code=404, detail="No se pudo registrar el cliente a la categoria")
     
     return "Cliente agregado exitosamente a la nueva categoria"
 

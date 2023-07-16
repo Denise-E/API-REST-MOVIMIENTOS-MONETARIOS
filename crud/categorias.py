@@ -19,13 +19,17 @@ def get_categoriesByClient_detail(db: Session,client_id: int):
 
     return finalList
 
-
-def getCategoryName(db: Session, category_id: int):
+def get_categoryById(db: Session,category_id: int):
     category = db.query(model_categoria.Categoria).filter(model_categoria.Categoria.id == category_id).first()
     
     if category is None:
         raise HTTPException(status_code=404, detail="No existe la categoria buscada")
+    
+    return category
 
+
+def getCategoryName(db: Session, category_id: int):
+    category = get_categoryById(db,category_id)
     return category.nombre
 
 def delete_clientCategories(db: Session, client_id: int):
@@ -43,4 +47,12 @@ Si existe el cliente, desde categorias valido id de la catgeoria valido y que el
 asociado ya a esa categoria
 '''
 def validateCategoryForClient(db: Session, client_id:int, cat_id: int):
-    return None
+    get_categoryById(db,cat_id) #Verifica que exista una categoria con el id solicitado, si no la hay lanza una excepcion
+
+    '''
+    Si existe la categoria (no se lanzo una excepcion), verifico que el usuario no este ya asociado 
+    a esa categoria. Si lo está lanzo excepción.
+    '''
+    clientCategories = get_categoriesByClient(db, client_id)
+    if any(cat.id_categoria == cat_id for cat in clientCategories):
+        raise HTTPException(status_code=404, detail="El cliente ya esta en la categoria solicitada")

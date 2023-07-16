@@ -85,7 +85,7 @@ def add_clientToCategory(data:schema_clientCategory.Categoria_ClienteCreate,db: 
     asociado ya a esa categoria'''
     crud_categorias.validateCategoryForClient(db, client_id=client_id, cat_id = data.id_categoria)
 
-    #Si esta todo ok agregao el registro a la tabla cliente_categoria
+    #Si esta todo ok agrego el registro a la tabla cliente_categoria
     new_category = model_categoriaCliente.Categoria_Cliente(id_categoria = data.id_categoria, id_cliente = client_id)
     db.add(new_category)
     db.commit()
