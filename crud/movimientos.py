@@ -1,6 +1,8 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 import models.Movimiento as model
 from schemas import MovimientoSchema as schema
+from crud import cuentas as crud_accounts
 
 def get_mov(db: Session, mov_id: int):
     return db.query(model.Movimiento).filter(model.Movimiento.id == mov_id).first()
@@ -9,6 +11,14 @@ def get_movementsByAccount(db: Session, account_id: int):
     return db.query(model.Movimiento).filter(model.Movimiento.id_cuenta == account_id).all()
 
 def create_mov(db: Session, data:schema.MovimientoCreate):
+    #Valido en caso que quieran hacer un egreso que alcance el saldo de la cuenta
+    if data.tipo == 2:
+        saldo = crud_accounts.get_clientBalance(db, data.id_cuenta) #Rutilizo el metodo ya creado
+        saldo = saldo.saldo_ARS
+
+    if (saldo - data.importe) < 0:
+        raise HTTPException(status_code=404, detail="Saldo insuficiente")
+
     new_mov = model.Movimiento(id_cuenta = data.id_cuenta, tipo = data.tipo, importe = data.importe, fecha = data.fecha)
     db.add(new_mov)
     db.commit()
