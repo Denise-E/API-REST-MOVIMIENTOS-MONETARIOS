@@ -29,7 +29,7 @@ def get_clientDetail(db: Session,client_id: int):
     return clientDetail
 
 
-def create_mov(db: Session, data:schema.ClienteCreate):
+def create_client(db: Session, data:schema.ClienteCreate):
     client = get_clientByDni(db, data.dni) #Valido que no exista ya el cliente por DNI
     new_client = None
 
@@ -43,6 +43,21 @@ def create_mov(db: Session, data:schema.ClienteCreate):
     db.refresh(new_client)
 
     return new_client
+
+#Actualizacion del Cliente. Solamente puede actualizarse su nombre y dni, no las cuestas y categorias a la cual se lo asocia.
+def update_client(client_id: int, data:schema.Cliente,db: Session):
+    client = get_clientById(db,client_id)
+
+    if client is None:
+        raise HTTPException(status_code=404, detail="No existe cliente con el id solicitado")
+    
+    client.dni = data.dni
+    client.nombre = data.nombre
+
+    db.commit()
+    db.refresh(client)
+
+    return client
 
 
 def delete_client(db: Session, client_id: int):

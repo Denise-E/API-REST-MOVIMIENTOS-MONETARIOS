@@ -42,12 +42,23 @@ Valido que no exista previamente el cliente por dni desde crud.create_mov
 '''
 @cliente.post('/clientes',response_model=schema.Cliente)
 def create_client(input: schema.ClienteCreate,db: Session = Depends(get_db)):
-    new_client = crud.create_mov(db, input)
+    new_client = crud.create_client(db, input)
 
     if new_client is None:
         raise HTTPException(status_code=404, detail="No se pudo registrar el cliente")
     
     return new_client
+
+
+#Editar un cliente. En este metodo no se modificaran sus cuentas ni sus categorias, dada la consigna.
+@cliente.put("/clientes/{client_id}",response_model=schema.Cliente)
+def update_client(client_id: int, input:schema.ClienteUpdate,db: Session = Depends(get_db)):
+    client = crud.update_client(client_id, input, db)
+
+    if client is None:
+        raise HTTPException(status_code=404, detail="No se pudo actualizar los datos del cliente")
+    
+    return client
 
 
 #Eliminacion de un cliente, incluyendo las cuentas y categorias_cliente.
@@ -59,7 +70,6 @@ def delete_client(client_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Cliente no encontrado")
 
     return db_client
-
 
 #Agrega un cliente ya existente a una nueva categoria.
 @cliente.post('/clientes/categorias/{client_id}')

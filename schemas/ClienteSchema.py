@@ -18,6 +18,7 @@ class ClienteCreate(BaseModel):
     class Config:
         orm_mode = True
 
+
 class ClienteDetail(BaseModel):
     id: int
     dni: int
@@ -28,3 +29,10 @@ class ClienteDetail(BaseModel):
     class Config:
         orm_mode = True
 
+#Sin actualizarse categorias y cuentas asociadas.
+class ClienteUpdate(BaseModel):
+    dni: int
+    nombre: str  
+
+    class Config:
+        orm_mode = True
