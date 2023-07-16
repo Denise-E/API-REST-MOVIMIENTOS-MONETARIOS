@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 import models.Cuenta as model
 from schemas import CuentaSchema as schema
 from crud import movimientos as crud_movimientos
+import json, requests
 
 
 def get_accountsByClient(db: Session,client_id: int):
@@ -44,8 +45,33 @@ def get_clientBalance(db: Session, account_id: int):
             else:
                 totalARS -= movements[i].importe
         
-        totalUSD = 20
+        totalUSD = get_total_usd(totalARS)
 
     clientBalance = schema.CuentaSaldo(saldo_ARS= totalARS, saldo_USD= totalUSD)
 
     return clientBalance
+
+def get_total_usd(totalARS: float):
+    usd_value = 0
+
+    response_API = requests.get('https://www.dolarsi.com/api/api.php?type=valoresprincipales')
+    data = response_API.json() #Accedo a todo el array que contiene la api
+    
+    #Busco el objeto con nombre = Dolar Bolsa
+    cont = 0
+    encontrado = False
+   
+    while encontrado is False and cont < len(data):
+        if data[cont]["casa"]["nombre"] == "Dolar Bolsa":
+            encontrado = True
+            usd_value = data[cont]["casa"]["venta"] #Me guardo la cotizacion de venta en una variable
+
+        cont+=1
+
+    #Formateando usd_value que llega como string con coma para poder transformarlo a floaT
+    float_usd = usd_value.replace(",", ".")
+    print("USD" , float_usd)
+
+    #Multiplico total obtenido en pesos por la cotizacion dolar venta de Dolar Bolsa
+    totalUSD = totalARS * float(float_usd)
+    return totalUSD
