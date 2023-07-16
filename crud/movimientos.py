@@ -5,6 +5,9 @@ from schemas import MovimientoSchema as schema
 def get_mov(db: Session, mov_id: int):
     return db.query(model.Movimiento).filter(model.Movimiento.id == mov_id).first()
 
+def get_movementsByAccount(db: Session, account_id: int):
+    return db.query(model.Movimiento).filter(model.Movimiento.id_cuenta == account_id).all()
+
 def create_mov(db: Session, data:schema.MovimientoCreate):
     new_mov = model.Movimiento(id_cuenta = data.id_cuenta, tipo = data.tipo, importe = data.importe, fecha = data.fecha)
     db.add(new_mov)

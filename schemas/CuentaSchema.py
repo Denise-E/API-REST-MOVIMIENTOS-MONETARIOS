@@ -1,16 +1,16 @@
 from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
 
-class CuentaBase(BaseModel):
-    id_cliente: int 
-
-class CuentaCreate(CuentaBase):
-    pass
-
-
-class Cuenta(CuentaBase): 
+class Cuenta(BaseModel): 
     id: int 
+    id_cliente: int
+
+    class Config:
+        orm_mode = True
+
+
+class CuentaSaldo(BaseModel):
+    saldo_ARS: float
+    saldo_USD: float
 
     class Config:
         orm_mode = True

@@ -4,8 +4,10 @@ from config.database import SessionLocal
 from sqlalchemy.orm import Session
 
 from crud import clientes as crud
+from crud import cuentas as crud_accounts
 from schemas import ClienteSchema as schema
 from schemas import Categoria_ClienteSchema as schema_clientCategory
+from schemas import CuentaSchema as schema_accounts
 
 cliente = APIRouter()
 
@@ -81,3 +83,13 @@ def add_clientToCategory(input: schema_clientCategory.Categoria_ClienteCreate,cl
     
     return "Cliente agregado exitosamente a la nueva categoria"
 
+
+#Detalle de cliente con id pasado por URL. Con sus cuentas y categorias.
+@cliente.get("/clientes/cuentas/{account_id}",response_model=schema_accounts.CuentaSaldo)
+def read_clients(account_id: int, db: Session = Depends(get_db)):
+    cuenta = crud_accounts.get_clientBalance(db, account_id = account_id)
+
+    if cuenta is None:
+        raise HTTPException(status_code=404, detail="Cuenta no existente")
+    
+    return cuenta
