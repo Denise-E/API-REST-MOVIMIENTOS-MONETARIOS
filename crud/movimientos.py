@@ -30,8 +30,8 @@ def create_mov(db: Session, data:schema.MovimientoCreate):
         saldo = crud_accounts.get_clientBalance(db, data.id_cuenta) #Rutilizo el metodo ya creado
         saldo = saldo.saldo_ARS
 
-    if (saldo - data.importe) < 0: #Si no alcanza para retirar el monto deciado lanzo Excepción con status 404
-        raise HTTPException(status_code=404, detail="Saldo insuficiente")
+        if (saldo - data.importe) < 0: #Si no alcanza para retirar el monto deciado lanzo Excepción con status 404
+            raise HTTPException(status_code=404, detail="Saldo insuficiente")
 
     #Si alcanzó el saldo para el egreso o estan solicitando un ingreso creo el registro.
     new_mov = model.Movimiento(id_cuenta = data.id_cuenta, tipo = data.tipo, importe = data.importe, fecha = data.fecha)
