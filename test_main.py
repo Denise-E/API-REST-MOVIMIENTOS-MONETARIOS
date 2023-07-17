@@ -1,5 +1,4 @@
 from fastapi.testclient import TestClient
-#from router.movimiento import movimiento
 from main import app
 
 test = TestClient(app)
@@ -27,7 +26,7 @@ def test_read_mov_incorrectId():
 
 
 #Creacion de un movimiento
-def test_create_mov_ingresoOk(): 
+def test_create_mov_incomeOk(): 
     response = test.post("/movimientos", json = { #Ingreso en cuenta existente
         "id_cuenta": 5,
         "tipo": 1,
@@ -82,17 +81,17 @@ def test_create_mov_invalid_accountId():
         "detail": "No existe una cuenta con el ID solicitado"
     }
 
-'''def test_create_mov_invalid_accountId():  
-    response = test.post("/movimientos", json = { #Tipo inexistente    #Agregar validacion
+def test_create_mov_invalid_accountId():  
+    response = test.post("/movimientos", json = { #Tipo de movimiento inexistente (id pasado) 
             "id_cuenta": 5,
             "tipo": 9,
             "importe": 200,
             "fecha": "2023-07-17T13:07:14.553Z"
         }) 
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "No existe una cuenta con el ID solicitado"
-    }'''
+    assert response.json() =={
+            "detail": "No existe el tipo de movimiento solicitado"
+        }
 
 # Eliminacion de un movimiento.
 '''def test_delete_mov():

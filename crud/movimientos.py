@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 import models.Movimiento as model
+import models.Tipo_Movimiento as model_movementsTypes
 from schemas import MovimientoSchema as schema
 from crud import cuentas as crud_accounts
 
@@ -26,6 +27,7 @@ Todo ingreso se registra y en caso de los egresos solo si alcanza el saldo en la
 '''
 def create_mov(db: Session, data:schema.MovimientoCreate):
     #Valido en caso que quieran hacer un egreso que alcance el saldo de la cuenta
+    verificateMovementType(db, data.tipo)
     if data.tipo == 2:
         saldo = crud_accounts.get_clientBalance(db, data.id_cuenta) #Rutilizo el metodo ya creado
         saldo = saldo.saldo_ARS
@@ -51,3 +53,12 @@ def delete_mov(db: Session, mov_id: int):
     #En caso de retornarse None se lanza una excepción desde el router    
     return mov
     
+def verificateMovementType(db: Session, type_id: int):
+    movementsTypes = db.query(model_movementsTypes.Tipo_Movimiento).offset(0).all()
+
+    existsType = False
+    if any(type.id == type_id for type in movementsTypes):
+       existsType = True
+
+    if existsType is False:
+        raise HTTPException(status_code=404, detail="No existe el tipo de movimiento solicitado")
