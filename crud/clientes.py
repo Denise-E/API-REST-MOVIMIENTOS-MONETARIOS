@@ -45,7 +45,7 @@ def create_client(db: Session, data:schema.ClienteCreate):
 
     #Si el cliente no estaba registrado valido los datos antes de crearlo 
     validations.validate_client_dni(data.dni)
-    validations.validate_client_name(data.name)
+    validations.validate_client_name(data.nombre)
 
     #Mismo proceso deberia hacerlo con el modelo de las tablas cuentas y categorias
     new_client = model.Cliente(dni = data.dni, nombre = data.nombre) #Creo el modelo del cliente
@@ -65,7 +65,7 @@ def update_client(client_id: int, data:schema.Cliente,db: Session):
     
     #Si existia, primero valido sus datos y si pasan la validacion los modifico
     validations.validate_client_dni(data.dni)
-    validations.validate_client_name(data.name)
+    validations.validate_client_name(data.nombre)
     client.dni = data.dni
     client.nombre = data.nombre
 

@@ -9,7 +9,7 @@ def validate_client_dni(dni):
 
 def validate_client_name(name):
     #Ni un string vacio ni mayor a 200, tamaño definido en la base de datos
-    if len(name) < 0 or len(name) > 200:
+    if len(name) <= 0 or len(name) > 200:
         raise HTTPException(status_code=404, detail="Ingrese un nombre valido")
 
 

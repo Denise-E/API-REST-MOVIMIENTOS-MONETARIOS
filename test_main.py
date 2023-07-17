@@ -276,7 +276,7 @@ def test_create_client_invalid_dni():
         "detail": "Ingrese un dni valido"
         }
 
-"""def test_create_client_invalid_name():
+def test_create_client_invalid_name():
     response = test.post("/clientes", json = { #Nombre invalido
             "dni": 23536277,
             "nombre": "",
@@ -288,7 +288,7 @@ def test_create_client_invalid_dni():
     assert response.status_code == 404
     assert response.json() == {
         "detail": "Ingrese un nombre valido"
-        }"""
+        }
 
 #Actualizacion de los datos de un cliente en particular
 def test_update_client():
@@ -325,7 +325,7 @@ def test_update_client_invalid_dni():
         }
 
 
-"""def test_update_client_invalid_name():
+def test_update_client_invalid_name():
     response = test.put("/clientes/90", json = { #Nombre invalido
             "dni": 89876554, 
             "nombre": "" 
@@ -333,7 +333,7 @@ def test_update_client_invalid_dni():
     assert response.status_code == 404
     assert response.json() == {
             "detail": "Ingrese un nombre valido"
-        }"""
+        }
 
 #Eliminacion de un cliente
 def test_delete_client():
