@@ -222,3 +222,98 @@ def test_create_client_alreadyRegister():
         "detail": "Ya existe un cliente registrado con el DNI ingresado"
         }
     
+
+#Actualizacion de los datos de un cliente en particular
+'''def test_update_client():
+    response = test.put("/clientes/4", json = { #Modificacion realizada, id valido
+            "dni": 12987335, 
+            "nombre": "Jose Maurro" 
+        }) 
+    assert response.status_code == 200
+    assert response.json() ==    {
+        "id": 4,
+        "dni": 12987335,
+        "nombre": "Jose Maurro"
+    }'''
+
+def test_update_client_invalidId():
+    response = test.put("/clientes/90", json = { #Id invalido
+            "dni": 22222222, 
+            "nombre": "Jose Gomez" 
+        }) 
+    assert response.status_code == 404
+    assert response.json() == {
+            "detail": "No existe cliente con el id solicitado"
+        }
+    
+
+#Eliminacion de un cliente
+'''def test_delete_client():
+    response = test.delete("/clientes/13")  #Id valido
+    assert response.status_code == 200
+    assert response.json() ==  {
+            "id": 13,
+            "dni": 2147483647,
+            "nombre": "Fausto Banza"
+        }'''
+
+def test_delete_client_invalidId():
+    response = test.delete("/clientes/80") 
+    assert response.status_code == 404
+    assert response.json() == {
+            "detail": "Cliente no encontrado"
+        }
+    
+
+#Agregar cliente a una categoria
+'''def test_add_clientToCategory():
+    response = test.post("/clientes/categorias/5", json = { #Id cliente y categoria valida
+                "id_categoria": 1
+        }) 
+    assert response.status_code == 200
+    assert response.json() == "Cliente agregado exitosamente a la nueva categoria"'''
+
+def test_add_clientToCategory_alreadyRegister():
+    response = test.post("/clientes/categorias/10", json = { #Cliente ya registrado previamente en la categoria solicitada
+            "id_categoria": 1
+        }) 
+    assert response.status_code == 404
+    assert response.json() == {
+            "detail": "El cliente ya esta en la categoria solicitada"
+        }
+
+def test_add_clientToCategory_invalidClientId():
+    response = test.post("/clientes/categorias/80", json = { #Id del cliente invalido
+            "id_categoria": 2
+        }) 
+    assert response.status_code == 404
+    assert response.json() == {
+            "detail": "No se encontro al cliente"
+        }
+
+def test_add_clientToCategory_invalidCategoryId():
+    response = test.post("/clientes/categorias/5", json = { #Id de la categoria invalido
+            "id_categoria": 9
+        }) 
+    assert response.status_code == 404
+    assert response.json() == {
+            "detail": "No existe la categoria buscada"
+        }
+    
+
+#Ver saldos de una cuenta en especifico
+def test_read_clientDetail():
+    response = test.get("/clientes/cuentas/1") #Pasandole un id válido
+    assert response.status_code == 200
+    assert response.json() == {
+        "saldo_ARS": 219300.0,
+        "saldo_USD": 109577631.0
+    }
+
+
+def test_read_clientDetail_invalidId():
+    response = test.get("/clientes/cuentas/90") #Pasandole un id inválido
+    assert response.status_code == 404
+    assert response.json() == {
+        "detail": "No existe una cuenta con el ID solicitado"
+    }

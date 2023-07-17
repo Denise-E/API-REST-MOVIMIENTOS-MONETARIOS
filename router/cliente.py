@@ -93,7 +93,7 @@ def add_clientToCategory(input: schema_clientCategory.Categoria_ClienteCreate,cl
 
 #Detalle de cliente con id pasado por URL. Con sus cuentas y categorias.
 @cliente.get("/clientes/cuentas/{account_id}",response_model=schema_accounts.CuentaSaldo)
-def read_clients(account_id: int, db: Session = Depends(get_db)):
+def read_clientDetail(account_id: int, db: Session = Depends(get_db)):
     #Obtengo el saldo total de la cuenta, tanto en pesos como en dolares
     cuenta = crud_accounts.get_clientBalance(db, account_id = account_id) 
 
