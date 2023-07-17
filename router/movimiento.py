@@ -17,7 +17,7 @@ def get_db():
     finally:
         db.close()
 
-
+        
 #Ruta para acceder por URL al detalle del movimiento con id especificado en la url, en caso de existir.
 @movimiento.get("/movimientos/{mov_id}",response_model=schema.Movimiento) 
 def read_mov(mov_id: int, db: Session = Depends(get_db)):
