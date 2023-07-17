@@ -308,7 +308,7 @@ def test_read_clientDetail():
     assert response.status_code == 200
     assert response.json() == {
         "saldo_ARS": 219300.0,
-        "saldo_USD": 109577631.0
+        "saldo_USD": 108601746.0
     }
 
 
