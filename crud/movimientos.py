@@ -5,6 +5,7 @@ import models.Movimiento as model
 import models.Tipo_Movimiento as model_movementsTypes
 from schemas import MovimientoSchema as schema
 from crud import cuentas as crud_accounts
+from crud import gral_validations as validations
 
 '''
 Busco movimiento por id en la base de datos. 
@@ -35,7 +36,15 @@ def create_mov(db: Session, data:schema.MovimientoCreate):
         if (saldo - data.importe) < 0: #Si no alcanza para retirar el monto deciado lanzo Excepción con status 404
             raise HTTPException(status_code=404, detail="Saldo insuficiente")
 
-    #Si alcanzó el saldo para el egreso o estan solicitando un ingreso creo el registro.
+    #Si alcanzó el saldo para el egreso o estan solicitando un ingreso valido los datos 
+    validations.validate_movement_mount(data.importe)
+    validations.validate_movement_date(data.fecha)
+    account = crud_accounts.get_accountById(data.id_cuenta)
+
+    if account is None:
+        raise HTTPException(status_code=404, detail="Ingrese un id de cuenta valido")
+
+    # Con los datos validados creo el registro.
     new_mov = model.Movimiento(id_cuenta = data.id_cuenta, tipo = data.tipo, importe = data.importe, fecha = data.fecha)
     db.add(new_mov)
     db.commit()

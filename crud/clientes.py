@@ -7,6 +7,7 @@ from schemas import ClienteSchema as schema
 from schemas import Categoria_ClienteSchema as schema_clientCategory
 from crud import categorias as crud_categorias
 from crud import cuentas as crud_cuentas
+from crud import gral_validations as validations
 
 #Obtengo todos los clientes registrados en mi base de datos
 def get_clients(db: Session, skip: int = 0):
@@ -41,7 +42,11 @@ def create_client(db: Session, data:schema.ClienteCreate):
     if client is not None: #Si el cliente ya está registrado lo informo.
         raise HTTPException(status_code=404, detail="Ya existe un cliente registrado con el DNI ingresado")
     
-    #Si el cliente no estaba rgeistrado lo creo. 
+
+    #Si el cliente no estaba registrado valido los datos antes de crearlo 
+    validations.validate_client_dni(data.dni)
+    validations.validate_client_name(data.name)
+
     #Mismo proceso deberia hacerlo con el modelo de las tablas cuentas y categorias
     new_client = model.Cliente(dni = data.dni, nombre = data.nombre) #Creo el modelo del cliente
     #Lo agrego a la base de datos y me aseguro de persistir los cambios.
@@ -58,7 +63,9 @@ def update_client(client_id: int, data:schema.Cliente,db: Session):
     if client is None: #Si no existe lo informo
         raise HTTPException(status_code=404, detail="No existe cliente con el id solicitado")
     
-    #Si existia, modifico sus datos
+    #Si existia, primero valido sus datos y si pasan la validacion los modifico
+    validations.validate_client_dni(data.dni)
+    validations.validate_client_name(data.name)
     client.dni = data.dni
     client.nombre = data.nombre
 

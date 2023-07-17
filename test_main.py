@@ -82,6 +82,20 @@ def test_create_mov_invalid_accountId():
         "detail": "No existe una cuenta con el ID solicitado"
     }
 
+"""def test_create_mov_invalid_accountId():  
+    response = test.post("/movimientos", json = { #id_cuenta inexistente
+            "id_cuenta": 5,
+            "tipo": 1,
+            "importe": 300,
+            "fecha": ""
+        }) 
+    assert response.status_code == 404
+    assert response.json() =={
+            "detail": "Ingrese un id de cuenta valido"
+        }
+    
+"""
+
 def test_create_mov_invalid_accountId():  
     response = test.post("/movimientos", json = { #Tipo de movimiento inexistente (id pasado) 
             "id_cuenta": 5,
@@ -93,6 +107,31 @@ def test_create_mov_invalid_accountId():
     assert response.json() =={
             "detail": "No existe el tipo de movimiento solicitado"
         }
+
+def test_create_mov_invalid_mount():  
+    response = test.post("/movimientos", json = { #Importe menor o igual a  0
+            "id_cuenta": 5,
+            "tipo": 1,
+            "importe": 0,
+            "fecha": "2023-07-17T13:07:14.553Z"
+        }) 
+    assert response.status_code == 404
+    assert response.json() =={
+            "detail": "Ingrese un monto valido"
+        }
+
+"""def test_create_mov_invalid_date():  
+    response = test.post("/movimientos", json = { #Fecha invalida
+            "id_cuenta": 5,
+            "tipo": 1,
+            "importe": 300,
+            "fecha": ""
+        }) 
+    assert response.status_code == 404
+    assert response.json() =={
+            "detail": "Ingrese una fecha valida"
+        }"""
+    
 
 # Eliminacion de un movimiento.
 def test_delete_mov():
@@ -222,7 +261,34 @@ def test_create_client_alreadyRegister():
     assert response.json() == {
         "detail": "Ya existe un cliente registrado con el DNI ingresado"
         }
-    
+
+def test_create_client_invalid_dni():
+    response = test.post("/clientes", json = { #DNI invalido
+            "dni": 0,
+            "nombre": "Fausto Banza",
+            "categorias": [
+                0
+            ],
+            "cantCuentas": 0
+        }) 
+    assert response.status_code == 404
+    assert response.json() == {
+        "detail": "Ingrese un dni valido"
+        }
+
+"""def test_create_client_invalid_name():
+    response = test.post("/clientes", json = { #Nombre invalido
+            "dni": 23536277,
+            "nombre": "",
+            "categorias": [
+                0
+            ],
+            "cantCuentas": 0
+        }) 
+    assert response.status_code == 404
+    assert response.json() == {
+        "detail": "Ingrese un nombre valido"
+        }"""
 
 #Actualizacion de los datos de un cliente en particular
 def test_update_client():
@@ -247,6 +313,27 @@ def test_update_client_invalidId():
             "detail": "No existe cliente con el id solicitado"
         }
     
+
+def test_update_client_invalid_dni():
+    response = test.put("/clientes/1", json = { #DNI invalido
+            "dni": 0, 
+            "nombre": "Jose Gomez" 
+        }) 
+    assert response.status_code == 404
+    assert response.json() == {
+            "detail": "Ingrese un dni valido"
+        }
+
+
+"""def test_update_client_invalid_name():
+    response = test.put("/clientes/90", json = { #Nombre invalido
+            "dni": 89876554, 
+            "nombre": "" 
+        }) 
+    assert response.status_code == 404
+    assert response.json() == {
+            "detail": "Ingrese un nombre valido"
+        }"""
 
 #Eliminacion de un cliente
 def test_delete_client():
