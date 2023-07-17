@@ -28,7 +28,7 @@ def read_clients(skip: int = 0, db: Session = Depends(get_db)):
 
 #Muestra el detalle del cliente con el id pasado por URL. Con sus cuentas y categorias.
 @cliente.get("/clientes/{client_id}", response_model=schema.ClienteDetail)
-def read_clients(client_id: int, db: Session = Depends(get_db)):
+def read_client(client_id: int, db: Session = Depends(get_db)):
     #Busca al cliente junto a sus cuentas y categorias. Devuelve un objeto ClienteDetail o None
     cliente = crud.get_clientDetail(db, client_id = client_id) 
 

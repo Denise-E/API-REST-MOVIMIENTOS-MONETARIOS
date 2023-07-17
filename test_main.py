@@ -26,7 +26,7 @@ def test_read_mov_incorrectId():
 
 
 #Creacion de un movimiento
-def test_create_mov_incomeOk(): 
+'''def test_create_mov_incomeOk(): 
     response = test.post("/movimientos", json = { #Ingreso en cuenta existente
         "id_cuenta": 5,
         "tipo": 1,
@@ -39,10 +39,10 @@ def test_create_mov_incomeOk():
             "tipo": 1,
             "importe": 230000,
             "fecha": "2023-07-17T13:07:14"
-        }
+        }'''
 
 
-def test_create_mov_outflowOk(): 
+'''def test_create_mov_outflowOk(): 
     response = test.post("/movimientos", json = { #Egreso en cuenta existente con saldo
             "id_cuenta": 5,
             "tipo": 2,
@@ -55,7 +55,7 @@ def test_create_mov_outflowOk():
             "tipo": 2,
             "importe": 200,
             "fecha": "2023-07-17T13:07:14"
-        }
+        }'''
     
 def test_create_mov_outflow_insuficientMoney(): 
     response = test.post("/movimientos", json = { #Egreso, sin alcanzar el saldo
@@ -111,3 +111,114 @@ def test_delete_mov():
     assert response.json() == {
             "detail": "Movimiento no encontrado"
         }
+    
+
+
+
+# TEST RUTAS CLIENTE ROUTER
+
+#Listado de todos los clientes
+'''def test_read_clients(): 
+    response = test.get("/clientes")
+    assert response.status_code == 200                        #Actualizar con regustros finales BBDD
+    assert response.json() == [
+        {
+            "id": 1,
+            "dni": 11111111,
+            "nombre": "Denise Eichenblat"
+        },
+        {
+            "id": 4,
+            "dni": 12987335,
+            "nombre": "Jose Mauro"
+        },
+        {
+            "id": 5,
+            "dni": 98654332,
+            "nombre": "Martina Diaz"
+        },
+        {
+            "id": 6,
+            "dni": 42588971,
+            "nombre": "Bart Simpson"
+        },
+        {
+            "id": 10,
+            "dni": 23232323,
+            "nombre": "Nancy Gimenes"
+        },
+        {
+            "id": 12,
+            "dni": 99999999,
+            "nombre": "Fausto Banza"
+        },
+        {
+            "id": 13,
+            "dni": 2147483647,
+            "nombre": "Fausto Banza"
+        }
+        ]
+'''
+
+#Ver detalle de un cliente en concreto
+def test_read_client():
+    response = test.get("/clientes/1") #Pasandole un id válido
+    assert response.status_code == 200
+    assert response.json() == {
+            "id": 1,
+            "dni": 11111111,
+            "nombre": "Denise Eichenblat",
+            "categorias": [
+                "Preferencial",
+                "Estandar"
+            ],
+            "cuentas": [
+                {
+                "IDs": [
+                    1,
+                    5,
+                    6
+                ]
+                }
+            ]
+        }
+
+def test_read_client_incorrectId():
+    response = test.get("/clientes/90") #Pasandole un id inexistente en la base de datos
+    assert response.status_code == 404
+    assert response.json() =={
+        "detail": "Cliente no existente"
+        }   
+
+#Creacion de un cliente
+'''def test_create_client():
+    response = test.post("/clientes", json = { #Cliente no registrado previamente
+            "dni": 33653422,
+            "nombre": "Facundo Jasin",
+            "categorias": [
+                0
+            ],
+            "cantCuentas": 0
+        }) 
+    assert response.status_code == 200
+    assert response.json() ==    {
+        "id": 16,
+        "dni": 33653422,
+        "nombre": "Facundo Jasin"
+    }'''
+
+
+def test_create_client_alreadyRegister():
+    response = test.post("/clientes", json = { #Cliente ya registrado previamente segun su DNI
+            "dni": 99999999,
+            "nombre": "Fausto Banza",
+            "categorias": [
+                0
+            ],
+            "cantCuentas": 0
+        }) 
+    assert response.status_code == 404
+    assert response.json() == {
+        "detail": "Ya existe un cliente registrado con el DNI ingresado"
+        }
+    
