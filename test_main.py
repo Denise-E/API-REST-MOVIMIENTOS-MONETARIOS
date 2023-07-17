@@ -26,7 +26,7 @@ def test_read_mov_incorrectId():
 
 
 #Creacion de un movimiento
-'''def test_create_mov_incomeOk(): 
+def test_create_mov_incomeOk(): 
     response = test.post("/movimientos", json = { #Ingreso en cuenta existente
         "id_cuenta": 5,
         "tipo": 1,
@@ -39,10 +39,10 @@ def test_read_mov_incorrectId():
             "tipo": 1,
             "importe": 230000,
             "fecha": "2023-07-17T13:07:14"
-        }'''
+        }
 
 
-'''def test_create_mov_outflowOk(): 
+def test_create_mov_outflowOk(): 
     response = test.post("/movimientos", json = { #Egreso en cuenta existente con saldo
             "id_cuenta": 5,
             "tipo": 2,
@@ -55,8 +55,9 @@ def test_read_mov_incorrectId():
             "tipo": 2,
             "importe": 200,
             "fecha": "2023-07-17T13:07:14"
-        }'''
+        }
     
+
 def test_create_mov_outflow_insuficientMoney(): 
     response = test.post("/movimientos", json = { #Egreso, sin alcanzar el saldo
             "id_cuenta": 5,
@@ -94,7 +95,7 @@ def test_create_mov_invalid_accountId():
         }
 
 # Eliminacion de un movimiento.
-'''def test_delete_mov():
+def test_delete_mov():
     response = test.delete("/movimientos/17") #Pasandole un id válido   #Para que no se elimine cada que vez que pruebo tests
     assert response.status_code == 200
     assert response.json() == {
@@ -103,7 +104,7 @@ def test_create_mov_invalid_accountId():
             "tipo": 2,
             "importe": 1000,
             "fecha": "2023-07-17T15:01:11"
-        }'''
+        }
     
 def test_delete_mov():
     response = test.delete("/movimientos/40") #Pasandole un id inválido
@@ -118,47 +119,47 @@ def test_delete_mov():
 # TEST RUTAS CLIENTE ROUTER
 
 #Listado de todos los clientes
-'''def test_read_clients(): 
+def test_read_clients(): 
     response = test.get("/clientes")
-    assert response.status_code == 200                        #Actualizar con regustros finales BBDD
+    assert response.status_code == 200         
     assert response.json() == [
-        {
-            "id": 1,
-            "dni": 11111111,
-            "nombre": "Denise Eichenblat"
-        },
-        {
-            "id": 4,
-            "dni": 12987335,
-            "nombre": "Jose Mauro"
-        },
-        {
-            "id": 5,
-            "dni": 98654332,
-            "nombre": "Martina Diaz"
-        },
-        {
-            "id": 6,
-            "dni": 42588971,
-            "nombre": "Bart Simpson"
-        },
-        {
-            "id": 10,
-            "dni": 23232323,
-            "nombre": "Nancy Gimenes"
-        },
-        {
-            "id": 12,
-            "dni": 99999999,
-            "nombre": "Fausto Banza"
-        },
-        {
-            "id": 13,
-            "dni": 2147483647,
-            "nombre": "Fausto Banza"
-        }
+            {
+                "id": 1,
+                "dni": 11111111,
+                "nombre": "Denise Eichenblat"
+            },
+            {
+                "id": 4,
+                "dni": 12987335,
+                "nombre": "Jose Mauro"
+            },
+            {
+                "id": 5,
+                "dni": 98654332,
+                "nombre": "Martina Diaz"
+            },
+            {
+                "id": 6,
+                "dni": 42588971,
+                "nombre": "Bart Simpson"
+            },
+            {
+                "id": 10,
+                "dni": 23232323,
+                "nombre": "Nancy Gimenes"
+            },
+            {
+                "id": 12,
+                "dni": 99999999,
+                "nombre": "Fausto Banza"
+            },
+            {
+                "id": 13,
+                "dni": 2147483647,
+                "nombre": "Fausto Banza"
+            }
         ]
-'''
+
 
 #Ver detalle de un cliente en concreto
 def test_read_client():
@@ -191,7 +192,7 @@ def test_read_client_incorrectId():
         }   
 
 #Creacion de un cliente
-'''def test_create_client():
+def test_create_client():
     response = test.post("/clientes", json = { #Cliente no registrado previamente
             "dni": 33653422,
             "nombre": "Facundo Jasin",
@@ -205,7 +206,7 @@ def test_read_client_incorrectId():
         "id": 16,
         "dni": 33653422,
         "nombre": "Facundo Jasin"
-    }'''
+    }
 
 
 def test_create_client_alreadyRegister():
@@ -224,7 +225,7 @@ def test_create_client_alreadyRegister():
     
 
 #Actualizacion de los datos de un cliente en particular
-'''def test_update_client():
+def test_update_client():
     response = test.put("/clientes/4", json = { #Modificacion realizada, id valido
             "dni": 12987335, 
             "nombre": "Jose Maurro" 
@@ -234,7 +235,7 @@ def test_create_client_alreadyRegister():
         "id": 4,
         "dni": 12987335,
         "nombre": "Jose Maurro"
-    }'''
+    }
 
 def test_update_client_invalidId():
     response = test.put("/clientes/90", json = { #Id invalido
@@ -248,14 +249,14 @@ def test_update_client_invalidId():
     
 
 #Eliminacion de un cliente
-'''def test_delete_client():
+def test_delete_client():
     response = test.delete("/clientes/13")  #Id valido
     assert response.status_code == 200
     assert response.json() ==  {
             "id": 13,
             "dni": 2147483647,
             "nombre": "Fausto Banza"
-        }'''
+        }
 
 def test_delete_client_invalidId():
     response = test.delete("/clientes/80") 
@@ -266,12 +267,12 @@ def test_delete_client_invalidId():
     
 
 #Agregar cliente a una categoria
-'''def test_add_clientToCategory():
+def test_add_clientToCategory():
     response = test.post("/clientes/categorias/5", json = { #Id cliente y categoria valida
                 "id_categoria": 1
         }) 
     assert response.status_code == 200
-    assert response.json() == "Cliente agregado exitosamente a la nueva categoria"'''
+    assert response.json() == "Cliente agregado exitosamente a la nueva categoria"
 
 def test_add_clientToCategory_alreadyRegister():
     response = test.post("/clientes/categorias/10", json = { #Cliente ya registrado previamente en la categoria solicitada
