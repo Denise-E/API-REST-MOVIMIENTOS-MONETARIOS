@@ -120,19 +120,6 @@ def test_create_mov_invalid_mount():
             "detail": "Ingrese un monto valido"
         }
 
-"""def test_create_mov_invalid_date():  
-    response = test.post("/movimientos", json = { #Fecha invalida
-            "id_cuenta": 5,
-            "tipo": 1,
-            "importe": 300,
-            "fecha": ""
-        }) 
-    assert response.status_code == 404
-    assert response.json() =={
-            "detail": "Ingrese una fecha valida"
-        }"""
-    
-
 # Eliminacion de un movimiento.
 def test_delete_mov():
     response = test.delete("/movimientos/17") #Pasandole un id válido   #Para que no se elimine cada que vez que pruebo tests

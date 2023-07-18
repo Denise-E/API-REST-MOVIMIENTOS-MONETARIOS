@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+import datetime
 
 def validate_client_dni(dni):
     #No valido que sea extactamente de 8 dígitos porque en otro países se que tienen más.
@@ -17,7 +18,3 @@ def validate_movement_mount(mount):
     if mount <= 0:
         raise HTTPException(status_code=404, detail="Ingrese un monto valido")
     
-
-def validate_movement_date(date):
-    if len(date) < 19:
-        raise HTTPException(status_code=404, detail="Ingrese una fecha valida")

@@ -15,7 +15,6 @@ class MovimientoCreate(BaseModel):
     id_cuenta: int
     tipo: int
     importe: float
-    fecha: datetime
     
     class Config:
         orm_mode = True

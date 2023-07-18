@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 import models.Movimiento as model
 import models.Tipo_Movimiento as model_movementsTypes
@@ -38,14 +39,13 @@ def create_mov(db: Session, data:schema.MovimientoCreate):
 
     #Si alcanzó el saldo para el egreso o estan solicitando un ingreso valido los datos 
     validations.validate_movement_mount(data.importe)
-    validations.validate_movement_date(data.fecha)
-    account = crud_accounts.get_accountById(data.id_cuenta)
+    account = crud_accounts.get_accountById(db,account_id=data.id_cuenta)
 
     if account is None:
         raise HTTPException(status_code=404, detail="Ingrese un id de cuenta valido")
 
     # Con los datos validados creo el registro.
-    new_mov = model.Movimiento(id_cuenta = data.id_cuenta, tipo = data.tipo, importe = data.importe, fecha = data.fecha)
+    new_mov = model.Movimiento(id_cuenta = data.id_cuenta, tipo = data.tipo, importe = data.importe, fecha = datetime.now())
     db.add(new_mov)
     db.commit()
     db.refresh(new_mov)
