@@ -30,15 +30,13 @@ def test_create_mov_incomeOk():
     response = test.post("/movimientos", json = { #Ingreso en cuenta existente
         "id_cuenta": 5,
         "tipo": 1,
-        "importe": 230000,
-        "fecha": "2023-07-17T13:07:14.553Z"
+        "importe": 230000
         }) 
     assert response.status_code == 200
     assert response.json() == {
             "id_cuenta": 5,
             "tipo": 1,
-            "importe": 230000,
-            "fecha": "2023-07-17T13:07:14"
+            "importe": 230000
         }
 
 
@@ -46,15 +44,13 @@ def test_create_mov_outflowOk():
     response = test.post("/movimientos", json = { #Egreso en cuenta existente con saldo
             "id_cuenta": 5,
             "tipo": 2,
-            "importe": 200,
-            "fecha": "2023-07-17T13:07:14.553Z"
+            "importe": 200
         }) 
     assert response.status_code == 200
     assert response.json() == {
             "id_cuenta": 5,
             "tipo": 2,
-            "importe": 200,
-            "fecha": "2023-07-17T13:07:14"
+            "importe": 200
         }
     
 
@@ -62,10 +58,9 @@ def test_create_mov_outflow_insuficientMoney():
     response = test.post("/movimientos", json = { #Egreso, sin alcanzar el saldo
             "id_cuenta": 5,
             "tipo": 2,
-            "importe": 1000000,
-            "fecha": "2023-07-17T13:07:14.553Z"
+            "importe": 1000000
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() == {
             "detail": "Saldo insuficiente"
         }
@@ -74,10 +69,9 @@ def test_create_mov_invalid_accountId():
     response = test.post("/movimientos", json = { #Movimiento a id_cuenta inexistente
             "id_cuenta": 99,
             "tipo": 2,
-            "importe": 200,
-            "fecha": "2023-07-17T13:07:14.553Z"
+            "importe": 200
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() == {
         "detail": "No existe una cuenta con el ID solicitado"
     }
@@ -86,10 +80,9 @@ def test_create_mov_invalid_accountId():
     response = test.post("/movimientos", json = { #id_cuenta inexistente
             "id_cuenta": 5,
             "tipo": 1,
-            "importe": 300,
-            "fecha": ""
+            "importe": 300
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() =={
             "detail": "Ingrese un id de cuenta valido"
         }
@@ -100,10 +93,9 @@ def test_create_mov_invalid_accountId():
     response = test.post("/movimientos", json = { #Tipo de movimiento inexistente (id pasado) 
             "id_cuenta": 5,
             "tipo": 9,
-            "importe": 200,
-            "fecha": "2023-07-17T13:07:14.553Z"
+            "importe": 200
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() =={
             "detail": "No existe el tipo de movimiento solicitado"
         }
@@ -112,10 +104,9 @@ def test_create_mov_invalid_mount():
     response = test.post("/movimientos", json = { #Importe menor o igual a  0
             "id_cuenta": 5,
             "tipo": 1,
-            "importe": 0,
-            "fecha": "2023-07-17T13:07:14.553Z"
+            "importe": 0
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() =={
             "detail": "Ingrese un monto valido"
         }
@@ -244,7 +235,7 @@ def test_create_client_alreadyRegister():
             ],
             "cantCuentas": 0
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() == {
         "detail": "Ya existe un cliente registrado con el DNI ingresado"
         }
@@ -258,7 +249,7 @@ def test_create_client_invalid_dni():
             ],
             "cantCuentas": 0
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() == {
         "detail": "Ingrese un dni valido"
         }
@@ -272,7 +263,7 @@ def test_create_client_invalid_name():
             ],
             "cantCuentas": 0
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() == {
         "detail": "Ingrese un nombre valido"
         }
@@ -306,18 +297,18 @@ def test_update_client_invalid_dni():
             "dni": 0, 
             "nombre": "Jose Gomez" 
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() == {
             "detail": "Ingrese un dni valido"
         }
 
 
 def test_update_client_invalid_name():
-    response = test.put("/clientes/90", json = { #Nombre invalido
+    response = test.put("/clientes/1", json = { #Nombre invalido
             "dni": 89876554, 
             "nombre": "" 
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() == {
             "detail": "Ingrese un nombre valido"
         }
@@ -333,7 +324,7 @@ def test_delete_client():
         }
 
 def test_delete_client_invalidId():
-    response = test.delete("/clientes/80") 
+    response = test.delete("/clientes/80")  #Id invalido
     assert response.status_code == 404
     assert response.json() == {
             "detail": "Cliente no encontrado"
@@ -352,7 +343,7 @@ def test_add_clientToCategory_alreadyRegister():
     response = test.post("/clientes/categorias/10", json = { #Cliente ya registrado previamente en la categoria solicitada
             "id_categoria": 1
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() == {
             "detail": "El cliente ya esta en la categoria solicitada"
         }
@@ -370,7 +361,7 @@ def test_add_clientToCategory_invalidCategoryId():
     response = test.post("/clientes/categorias/5", json = { #Id de la categoria invalido
             "id_categoria": 9
         }) 
-    assert response.status_code == 404
+    assert response.status_code == 400
     assert response.json() == {
             "detail": "No existe la categoria buscada"
         }

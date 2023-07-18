@@ -35,21 +35,21 @@ def create_mov(db: Session, data:schema.MovimientoCreate):
         saldo = saldo.saldo_ARS
 
         if (saldo - data.importe) < 0: #Si no alcanza para retirar el monto deciado lanzo Excepción con status 404
-            raise HTTPException(status_code=404, detail="Saldo insuficiente")
+            raise HTTPException(status_code=400, detail="Saldo insuficiente")
 
     #Si alcanzó el saldo para el egreso o estan solicitando un ingreso valido los datos 
     validations.validate_movement_mount(data.importe)
     account = crud_accounts.get_accountById(db,account_id=data.id_cuenta)
 
     if account is None:
-        raise HTTPException(status_code=404, detail="Ingrese un id de cuenta valido")
+        raise HTTPException(status_code=400, detail="Ingrese un id de cuenta valido")
 
     # Con los datos validados creo el registro.
     new_mov = model.Movimiento(id_cuenta = data.id_cuenta, tipo = data.tipo, importe = data.importe, fecha = datetime.now())
     db.add(new_mov)
     db.commit()
     db.refresh(new_mov)
-    return new_mov
+    return data
 
 #Eliminación de un movimiento segun su id
 def delete_mov(db: Session, mov_id: int):
@@ -70,4 +70,4 @@ def verificateMovementType(db: Session, type_id: int):
        existsType = True
 
     if existsType is False:
-        raise HTTPException(status_code=404, detail="No existe el tipo de movimiento solicitado")
+        raise HTTPException(status_code=400, detail="No existe el tipo de movimiento solicitado")

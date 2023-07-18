@@ -40,7 +40,7 @@ def create_client(db: Session, data:schema.ClienteCreate):
     new_client = None
 
     if client is not None: #Si el cliente ya está registrado lo informo.
-        raise HTTPException(status_code=404, detail="Ya existe un cliente registrado con el DNI ingresado")
+        raise HTTPException(status_code=400, detail="Ya existe un cliente registrado con el DNI ingresado")
     
 
     #Si el cliente no estaba registrado valido los datos antes de crearlo 

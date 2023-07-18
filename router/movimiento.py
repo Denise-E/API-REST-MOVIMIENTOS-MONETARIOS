@@ -35,7 +35,7 @@ def create_mov(input: schema.MovimientoCreate,db: Session = Depends(get_db)):
     new_mov = crud.create_mov(db, input) #Creo el movimiento
 
     if new_mov is None: #Si me retornó None, no se pudo efectuar el movimiento y lanzo excepción avisandolo.
-        raise HTTPException(status_code=404, detail="No se pudo registrar el movimiento")
+        raise HTTPException(status_code=400, detail="No se pudo registrar el movimiento")
     
     return new_mov #Si se creó, muestro el registro creado.
 

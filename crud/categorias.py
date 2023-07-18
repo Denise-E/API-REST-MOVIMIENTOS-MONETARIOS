@@ -25,7 +25,7 @@ def get_categoryById(db: Session,category_id: int):
     category = db.query(model_categoria.Categoria).filter(model_categoria.Categoria.id == category_id).first()
     
     if category is None: #Si no existe la categoria lo informo
-        raise HTTPException(status_code=404, detail="No existe la categoria buscada")
+        raise HTTPException(status_code=400, detail="No existe la categoria buscada")
     
     return category #Si existe la categoria la devuelvo
 
@@ -62,4 +62,4 @@ def validateCategoryForClient(db: Session, client_id:int, cat_id: int):
     '''
     clientCategories = get_categoriesByClient(db, client_id)
     if any(cat.id_categoria == cat_id for cat in clientCategories):
-        raise HTTPException(status_code=404, detail="El cliente ya esta en la categoria solicitada")
+        raise HTTPException(status_code=400, detail="El cliente ya esta en la categoria solicitada")

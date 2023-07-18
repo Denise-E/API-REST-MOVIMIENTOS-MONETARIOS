@@ -52,7 +52,7 @@ def create_client(input: schema.ClienteCreate,db: Session = Depends(get_db)):
     new_client = crud.create_client(db, input)
 
     if new_client is None: #Si no se lo pudo registrar lanzo una excepción
-        raise HTTPException(status_code=404, detail="No se pudo registrar el cliente")
+        raise HTTPException(status_code=400, detail="No se pudo registrar el cliente")
     
     return new_client #Si se registró al cliente lo devuelvo
 
@@ -63,7 +63,7 @@ def update_client(client_id: int, input:schema.ClienteUpdate,db: Session = Depen
     client = crud.update_client(client_id, input, db) #Actualización del cliente
 
     if client is None: #Si no pudo actualizarse lanzo excepción informandolo
-        raise HTTPException(status_code=404, detail="No se pudo actualizar los datos del cliente")
+        raise HTTPException(status_code=400, detail="No se pudo actualizar los datos del cliente")
     
     return client #Si se actualizó muestro los valores actualizados
 
@@ -86,7 +86,7 @@ def add_clientToCategory(input: schema_clientCategory.Categoria_ClienteCreate,cl
     client = crud.add_clientToCategory(input,db,client_id=client_id) 
 
     if client is None: # Si llegó None informo la situación
-        raise HTTPException(status_code=404, detail="No se pudo registrar el cliente a la categoria")
+        raise HTTPException(status_code=400, detail="No se pudo registrar el cliente a la categoria")
     
     return "Cliente agregado exitosamente a la nueva categoria" #Muestro un mensaje de éxito si se creó el registro
 
