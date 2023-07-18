@@ -30,7 +30,7 @@ def read_mov(mov_id: int, db: Session = Depends(get_db)):
 
 
 #Ruta para la creación de un movimiento (Ingreso o Egreso de dinero a una cuenta)
-@movimiento.post("/movimientos",response_model=schema.MovimientoCreate)
+@movimiento.post("/movimientos",response_model=schema.MovimientoCreate,status_code=201)
 def create_mov(input: schema.MovimientoCreate,db: Session = Depends(get_db)):
     new_mov = crud.create_mov(db, input) #Creo el movimiento
 

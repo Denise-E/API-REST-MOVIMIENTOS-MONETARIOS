@@ -43,7 +43,7 @@ Creación de un cliente. Al crearse también se deberían crear una o más cuent
 una categoria. El alta de estos últimos no deben hacerse por consigna pero si estan incluidos los campos en el 
 esquema.
 '''
-@cliente.post('/clientes',response_model=schema.Cliente)
+@cliente.post('/clientes',response_model=schema.Cliente, status_code=201)
 def create_client(input: schema.ClienteCreate,db: Session = Depends(get_db)):
     '''
     Se intenta crear un cliente, realizando las validaciones previas pertinentes desde la carpeta crud.
@@ -80,7 +80,7 @@ def delete_client(client_id: int, db: Session = Depends(get_db)): #Eliminación 
     return db_client #Si se eliminó el cliente muestro sus datos 
 
 #Agrega un cliente ya existente a una nueva categoria
-@cliente.post('/clientes/categorias/{client_id}')
+@cliente.post('/clientes/categorias/{client_id}', status_code=201)
 def add_clientToCategory(input: schema_clientCategory.Categoria_ClienteCreate,client_id: int, db: Session = Depends(get_db)):
     #Agrego el cliente a la categoria solicitada realizando las validaciones pertinentes desde el método
     client = crud.add_clientToCategory(input,db,client_id=client_id) 

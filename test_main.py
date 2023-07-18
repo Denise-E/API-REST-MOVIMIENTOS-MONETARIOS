@@ -32,7 +32,7 @@ def test_create_mov_incomeOk():
         "tipo": 1,
         "importe": 230000
         }) 
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json() == {
             "id_cuenta": 5,
             "tipo": 1,
@@ -46,7 +46,7 @@ def test_create_mov_outflowOk():
             "tipo": 2,
             "importe": 200
         }) 
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json() == {
             "id_cuenta": 5,
             "tipo": 2,
@@ -218,7 +218,7 @@ def test_create_client():
             ],
             "cantCuentas": 0
         }) 
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json() ==    {
         "id": 16,
         "dni": 33653422,
@@ -336,7 +336,7 @@ def test_add_clientToCategory():
     response = test.post("/clientes/categorias/5", json = { #Id cliente y categoria valida
                 "id_categoria": 1
         }) 
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json() == "Cliente agregado exitosamente a la nueva categoria"
 
 def test_add_clientToCategory_alreadyRegister():
