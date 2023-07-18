@@ -31,18 +31,15 @@ def create_mov(db: Session, data:schema.MovimientoCreate):
     #Valido en caso que quieran hacer un egreso que alcance el saldo de la cuenta
     verificateMovementType(db, data.tipo)
     if data.tipo == 2:
-        saldo = crud_accounts.get_clientBalance(db, data.id_cuenta) #Rutilizo el metodo ya creado
+        #Reutilizo el metodo ya creado, valida que el id_cuenta sea válido y obtiene los saldos
+        saldo = crud_accounts.get_clientBalance(db, data.id_cuenta) 
         saldo = saldo.saldo_ARS
 
         if (saldo - data.importe) < 0: #Si no alcanza para retirar el monto deciado lanzo Excepción con status 404
             raise HTTPException(status_code=400, detail="Saldo insuficiente")
 
-    #Si alcanzó el saldo para el egreso o estan solicitando un ingreso valido los datos 
+    #Si alcanzó el saldo para el egreso o estan solicitando un ingreso valido ahora el monto enviado
     validations.validate_movement_mount(data.importe)
-    account = crud_accounts.get_accountById(db,account_id=data.id_cuenta)
-
-    if account is None:
-        raise HTTPException(status_code=400, detail="Ingrese un id de cuenta valido")
 
     # Con los datos validados creo el registro.
     new_mov = model.Movimiento(id_cuenta = data.id_cuenta, tipo = data.tipo, importe = data.importe, fecha = datetime.now())

@@ -73,21 +73,9 @@ def test_create_mov_invalid_accountId():
         }) 
     assert response.status_code == 400
     assert response.json() == {
-        "detail": "No existe una cuenta con el ID solicitado"
-    }
-
-"""def test_create_mov_invalid_accountId():  
-    response = test.post("/movimientos", json = { #id_cuenta inexistente
-            "id_cuenta": 5,
-            "tipo": 1,
-            "importe": 300
-        }) 
-    assert response.status_code == 400
-    assert response.json() =={
-            "detail": "Ingrese un id de cuenta valido"
+            "detail": "No existe una cuenta con el ID solicitado"
         }
-    
-"""
+
 
 def test_create_mov_invalid_accountId():  
     response = test.post("/movimientos", json = { #Tipo de movimiento inexistente (id pasado) 
@@ -337,7 +325,10 @@ def test_add_clientToCategory():
                 "id_categoria": 1
         }) 
     assert response.status_code == 201
-    assert response.json() == "Cliente agregado exitosamente a la nueva categoria"
+    assert response.json() == {
+            "id_categoria": 1,
+            "id_cliente": 5
+        }
 
 def test_add_clientToCategory_alreadyRegister():
     response = test.post("/clientes/categorias/10", json = { #Cliente ya registrado previamente en la categoria solicitada

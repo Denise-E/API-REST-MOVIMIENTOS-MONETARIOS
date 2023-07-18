@@ -21,13 +21,13 @@ def get_db():
 
 
 #Devuelve el listado de todos los clientes, sin detalles de sus cuentas ni categorias
-@cliente.get("/clientes", response_model=list[schema.Cliente])
+@cliente.get("/clientes", response_model=list[schema.Cliente], status_code=200)
 def read_clients(skip: int = 0, db: Session = Depends(get_db)):
     return crud.get_clients(db, skip=skip)
      
 
 #Muestra el detalle del cliente con el id pasado por URL. Con sus cuentas y categorias.
-@cliente.get("/clientes/{client_id}", response_model=schema.ClienteDetail)
+@cliente.get("/clientes/{client_id}", response_model=schema.ClienteDetail, status_code=200)
 def read_client(client_id: int, db: Session = Depends(get_db)):
     #Busca al cliente junto a sus cuentas y categorias. Devuelve un objeto ClienteDetail o None
     cliente = crud.get_clientDetail(db, client_id = client_id) 
@@ -58,7 +58,7 @@ def create_client(input: schema.ClienteCreate,db: Session = Depends(get_db)):
 
 
 #Editar un cliente. En este metodo no se modificaran sus cuentas ni sus categorias, dada la consigna
-@cliente.put("/clientes/{client_id}",response_model=schema.Cliente)
+@cliente.put("/clientes/{client_id}",response_model=schema.Cliente, status_code=200)
 def update_client(client_id: int, input:schema.ClienteUpdate,db: Session = Depends(get_db)):
     client = crud.update_client(client_id, input, db) #Actualización del cliente
 
@@ -69,7 +69,7 @@ def update_client(client_id: int, input:schema.ClienteUpdate,db: Session = Depen
 
 
 #Eliminacion de un cliente, incluyendo las cuentas y categorias_cliente
-@cliente.delete("/clientes/{client_id}",response_model=schema.Cliente)
+@cliente.delete("/clientes/{client_id}",response_model=schema.Cliente, status_code=200)
 def delete_client(client_id: int, db: Session = Depends(get_db)): #Eliminación del cliente
     db_client = crud.delete_client(db, client_id=client_id)
 
@@ -80,7 +80,7 @@ def delete_client(client_id: int, db: Session = Depends(get_db)): #Eliminación 
     return db_client #Si se eliminó el cliente muestro sus datos 
 
 #Agrega un cliente ya existente a una nueva categoria
-@cliente.post('/clientes/categorias/{client_id}', status_code=201)
+@cliente.post('/clientes/categorias/{client_id}',response_model=schema_clientCategory.Categoria_ClienteBase ,status_code=201)
 def add_clientToCategory(input: schema_clientCategory.Categoria_ClienteCreate,client_id: int, db: Session = Depends(get_db)):
     #Agrego el cliente a la categoria solicitada realizando las validaciones pertinentes desde el método
     client = crud.add_clientToCategory(input,db,client_id=client_id) 
@@ -88,11 +88,11 @@ def add_clientToCategory(input: schema_clientCategory.Categoria_ClienteCreate,cl
     if client is None: # Si llegó None informo la situación
         raise HTTPException(status_code=400, detail="No se pudo registrar el cliente a la categoria")
     
-    return "Cliente agregado exitosamente a la nueva categoria" #Muestro un mensaje de éxito si se creó el registro
-
+    #return "Cliente agregado exitosamente a la nueva categoria" #Muestro un mensaje de éxito si se creó el registro
+    return client
 
 #Detalle de cliente con id pasado por URL. Con sus cuentas y categorias.
-@cliente.get("/clientes/cuentas/{account_id}",response_model=schema_accounts.CuentaSaldo)
+@cliente.get("/clientes/cuentas/{account_id}",response_model=schema_accounts.CuentaSaldo, status_code=200)
 def read_clientDetail(account_id: int, db: Session = Depends(get_db)):
     #Obtengo el saldo total de la cuenta, tanto en pesos como en dolares
     cuenta = crud_accounts.get_clientBalance(db, account_id = account_id) 

@@ -19,7 +19,7 @@ def get_db():
 
         
 #Ruta para acceder por URL al detalle del movimiento con id especificado en la url, en caso de existir.
-@movimiento.get("/movimientos/{mov_id}",response_model=schema.Movimiento) 
+@movimiento.get("/movimientos/{mov_id}",response_model=schema.Movimiento, status_code=200) 
 def read_mov(mov_id: int, db: Session = Depends(get_db)):
     db_mov = crud.get_mov(db, mov_id=mov_id) #Busco el movimiento por ID
 
@@ -30,7 +30,7 @@ def read_mov(mov_id: int, db: Session = Depends(get_db)):
 
 
 #Ruta para la creación de un movimiento (Ingreso o Egreso de dinero a una cuenta)
-@movimiento.post("/movimientos",response_model=schema.MovimientoCreate,status_code=201)
+@movimiento.post("/movimientos",response_model=schema.MovimientoCreate, status_code=201)
 def create_mov(input: schema.MovimientoCreate,db: Session = Depends(get_db)):
     new_mov = crud.create_mov(db, input) #Creo el movimiento
 
@@ -41,7 +41,7 @@ def create_mov(input: schema.MovimientoCreate,db: Session = Depends(get_db)):
 
 
 #Ruta para eliminar un movimiento por su id
-@movimiento.delete("/movimientos/{mov_id}",response_model=schema.Movimiento)
+@movimiento.delete("/movimientos/{mov_id}",response_model=schema.Movimiento, status_code=200)
 def delete_mov(mov_id: int, db: Session = Depends(get_db)):
     db_mov = crud.delete_mov(db, mov_id=mov_id) #Elimino el movimiento
 
